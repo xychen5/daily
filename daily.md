@@ -43,11 +43,17 @@ This is so you can use the lib command. Your lib.exe may be located elsewhere.
 - 3 编译gmp
 运行两个： ./configure 和 make install
 ```sh
-./configure
+./configure --prefix=/home/chenxy/mylibs/newTry/gmp-6.2.0/build/static --enable-static --disable-shared
+configure: summary of build options:
+
   Version:           GNU MP 6.2.0
   Host type:         skylake-pc-cygwin
   ABI:               64
+<<<<<<< HEAD
   Install prefix:    /usr/local #说明会将库安装到该目录下，这和linux是很相似的
+=======
+  Install prefix:    /home/chenxy/mylibs/newTry/gmp-6.2.0/build/static
+>>>>>>> 1136129454eb59dc97d69399c9184870bce08479
   Compiler:          gcc
   Static libraries:  yes
   Shared libraries:  no
@@ -82,9 +88,10 @@ configure: error: gmp.h can't be found, or is unusable.
 ```
 所以：
 ```sh
-./configure --prefix=/home/chenxy/mylibs/mpfr-4.1.0/build \
---with-gmp-include=/home/chenxy/mylibs/gmp-6.2.0/build/shared/include \
---with-gmp-lib=/home/chenxy/mylibs/gmp-6.2.0/build/shared/lib
+./configure --prefix=/home/chenxy/mylibs/newTry/mpfr-4.1.0/build/static \
+--enable-static --disable-shared \
+--with-gmp-include=/home/chenxy/mylibs/newTry/gmp-6.2.0/build/static/include \
+--with-gmp-lib=/home/chenxy/mylibs/newTry/gmp-6.2.0/build/staic/lib
 
 make install
 ```
