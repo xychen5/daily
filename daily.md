@@ -1,3 +1,145 @@
+## 2020/10/09
+替换windows路径
+```sh
+sed -i 's|\\|/|g' ./result.txt
+sed -i 's|D:/Datasets/guangtie/LessImages/dense|/home/ld/Documents/modelFiles/123/mvs|g' ./result.txt
+```
+
+## 2020/10/11
+
+### 1 使用OpenMVS贴纹理
+#### 1.1 文件准备
+the dir which has result.out(camera's info), should have a result.txt which demostrate where is the images
+attention: result.txt should be the imagelist file;
+```sh
+[nash5 mvs]# head -n 5 result.txt 
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0146.JPG
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0132.JPG
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0133.JPG
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0134.JPG
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0141.JPG
+[nash5 mvs]# head -n 10 result.out
+# Bundle file v0.3
+63 66674
+4318.92 0 0
+-0.999016 0.0442186 0.003457
+0.0197872 0.514087 -0.85751
+-0.0396951 -0.856598 -0.514456
+-0.285562 3.57279 -1.96389
+4318.92 0 0
+-0.999732 0.00834863 0.0216004
+-0.0141811 0.5167 -0.856049
+```
+#### 1.2 使用OpenMVS转换文件格式然后贴纹理
+```sh
+/home/ld/prjs/OpenMVS/openMVS_build/bin/InterfaceVisualSFM -i result.out -o new
+/home/ld/prjs/OpenMVS/openMVS_build/bin/TextureMesh --mesh-file ./result_dense_mesh_refined.ply -i new.mvs -o textured
+```
+
+### 2 使用MVE和texRecon贴纹理
+#### 2.0 MVE和texRecon安装
+[https://www.gcc.tu-darmstadt.de/home/proj/texrecon/index.en.jsp](https://www.gcc.tu-darmstadt.de/home/proj/texrecon/index.en.jsp)
+在使用texRecon的时候, 注意如下:
+texrecon/elibs/mve/libs/mve/camera.cc +125的
+<font color=#FF0000> void CameraInfo::fill_calibration </font>函数
+
+其ax乘的flen是单位化以后的flen， 单位化的flen的方式见[https://github.com/simonfuhrmann/mve/wiki/Math-Cookbook](https://github.com/simonfuhrmann/mve/wiki/Math-Cookbook): 
+```cpp
+void
+CameraInfo::fill_calibration (float* mat, float width, float height) const
+{
+    float dim_aspect = width / height;
+    float image_aspect = dim_aspect * this->paspect;
+    float ax, ay;
+    if (image_aspect < 1.0f) /* Portrait. */
+    {
+        ax = this->flen * height / this->paspect;
+        ay = this->flen * height;
+    }
+    else /* Landscape. */
+    {
+        ax = this->flen * width;
+        ay = this->flen * width * this->paspect;
+    }
+
+    mat[0] = this->flen; mat[1] =       0.0f; mat[2] =  width * this->ppoint[0];
+    mat[3] =       0.0f; mat[4] = this->flen; mat[5] = height * this->ppoint[1];
+    mat[6] =       0.0f; mat[7] =       0.0f; mat[8] =                     1.0f;
+
+    //mat[0] =   ax; mat[1] = 0.0f; mat[2] = width * this->ppoint[0];
+    //mat[3] = 0.0f; mat[4] =   ay; mat[5] = height * this->ppoint[1];
+    //mat[6] = 0.0f; mat[7] = 0.0f; mat[8] = 1.0f;
+}
+```
+
+#### 2.1 对相机数据进行预处理然后转化格式
+- 1 你会发现相机的平移和旋转矩阵的后两行都添加了负号(使用meshlab打开看相机的朝向和result.out的rot[2][2] (代表相机朝向的是z正方向还是负方向))， 按照需要改过来并且转换为MVE支持的一种格式(详细见2.2),该bundle file的详细格式可以参考：[https://www.cs.cornell.edu/~snavely/bundler/bundler-v0.4-manual.html](https://www.cs.cornell.edu/~snavely/bundler/bundler-v0.4-manual.html)
+```sh
+### ori camfile from colmap:
+[nash5 123]# head -n 10 result.out 
+# Bundle file v0.3
+63 66674                        # imageNum pointsNum
+4318.92 0 0                     # focal_len disortionCoe1 distortionCoe2
+-0.999732 0.00834863 0.0216004  # rot[0][0:2]
+-0.0141811 0.5167 -0.856049     # rot[1][0:2]
+-0.0183078 -0.856126 -0.516443  # rot[2][0:2]
+1.99173 4.31377 -2.39484        # translation[0:2]
+4318.92 0 0
+-0.999016 0.0442186 0.003457
+0.0197872 0.514087 -0.85751
+
+### 转换后（针对于一个数据）
+[nash5 123]# cd scene1006/
+[nash5 scene1006]# cat DJI_0132.CAM 
+1.99173 -4.31377 2.39484 -0.999732 0.00834863 0.0216004 .0141811 -.5167 .856049 .0183078 .856126 .516443
+4318.92 0 0 1 0.5 0.5
+```
+#### 2.2 文件格式准备:
+首先需要有4个文件：
+```sh
+result_dense_mesh_refined.ply # 需要贴图的mesh
+result.imagelist              # 贴图的图片的位置（views）
+result.out                    # 每个图片（view）的相机参数
+images/*.JPG                  # 图片
+[nash5 123]# head -n 5 result.imagelist
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0146.JPG
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0132.JPG
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0133.JPG
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0134.JPG
+/home/ld/Documents/modelFiles/123/mvs/images/DJI_0141.JPG
+```
+- 1 转化后的数据(转化要求详见: texRecon -h或mve在github上的math部分)例子：使用脚本将result.out作为输入, 为每一个图片生成一个.CAM文件：(可以参照：[https://github.com/xychen5/fft/blob/master/colmapToTexrecon/turnYZ_in_camera_rot_and_translation.sh](https://github.com/xychen5/fft/blob/master/colmapToTexrecon/turnYZ_in_camera_rot_and_translation.sh))
+```sh
+### 转换前（使用texrecon -h获得它需要的文件格式）
+[nash5 123]# head -n 10 result.out 
+# Bundle file v0.3
+63 66674                        # imageNum pointsNum
+4318.92 0 0                     # focal_len disortionCoe1 distortionCoe2
+-0.999732 0.00834863 0.0216004  # rot[0][0:2]
+-0.0141811 0.5167 -0.856049     # rot[1][0:2]
+-0.0183078 -0.856126 -0.516443  # rot[2][0:2]
+1.99173 4.31377 -2.39484        # translation[0:2]
+4318.92 0 0
+-0.999016 0.0442186 0.003457
+0.0197872 0.514087 -0.85751
+### 转换后（针对于一个数据）
+[nash5 123]# cd scene1006/
+[nash5 scene1006]# cat DJI_0132.CAM 
+1.99173 -4.31377 2.39484 -0.999732 0.00834863 0.0216004 .0141811 -.5167 .856049 .0183078 .856126 .516443
+4318.92 0 0 1 0.5 0.5
+```
+- 2 经过step1获得如下一个文件夹：（对应的每一个图片都有一个相机文件）
+```sh
+[nash5 reRun]# ls scene1006/
+ DJI_0132.CAM   DJI_0145.CAM   DJI_0188.CAM      'DJI_0303(1).CAM'   DJI_0327.CAM   DJI_0334.CAM   DJI_0341.CAM   DJI_0348.CAM   DJI_0367.CAM
+ DJI_0132.JPG   DJI_0145.JPG   DJI_0188.JPG      'DJI_0303(1).JPG'   DJI_0327.JPG   DJI_0334.JPG   DJI_0341.JPG   DJI_0348.JPG   DJI_0367.JPG
+```
+- 3 将该文件夹作为texRecon的输入即可：(耗时较长，几十分钟到几个小时，看数据和机器)
+```sh
+/home/ld/prjs/recon3d/texRecon/texrecon/cmake-build-debug/apps/texrecon/texrecon scene1006 result_dense_mesh_refined.ply textured2 --skip_geometric_visibility_test
+```
+
+
 ## 2020/10/13
 margin probality
 
