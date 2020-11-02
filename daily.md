@@ -228,7 +228,7 @@ __注意： 出现找不到cl和cstddef的问题多半是环境变量的问题�
 ### 编译OpenMVS
 按照其官方的buildingWilki[https://github.com/cdcseacave/openMVS/wiki/Building](https://github.com/cdcseacave/openMVS/wiki/Building)将相关的依赖库放到其同级目录，新建build然后进入，执行的cmake指令如下：
 ```sh
-# 在 windows terminal中执行
+# 在 windows terminal中执行(cmake -G "Visual Studio 14 Win64" path\to\source\dir)
 
 cmake . ..\openMVS\ `
 -G "Visual Studio 16 2019" `
@@ -289,6 +289,7 @@ SET (JPEG_LIBRARY "F:/BASE_ENV/forOpenMVS/jpegsr9/libjpeg.lib")
 
 ### 1.1 命令行调用OpenMVS
 sh
+```
 # 依赖于opencv的几个dll库
 -a----       2020/10/24     20:22        3063296 opencv_calib3d450.dll
 -a----       2020/10/29      9:50       17019904 opencv_core450.dll
@@ -302,6 +303,14 @@ for i in $(ls); do cp ${i} ../lowerCaseImages/${i,,}; done
 F:\BASE_ENV\forOpenMVS\build\bin\x64\Release\InterfaceVisualSFM.exe -i result.out -o result.mvs
 F:\BASE_ENV\forOpenMVS\build\bin\x64\Release\TextureMesh.exe --mesh-file result_dense_mesh_simple.ply -i result.mvs -o result.ply
 ```
+
+## 2020/10/30
+### 1 LRU实现：(参考colmap中的utils/cache.h)
+least recently used(will be discard)
+```log
+务必将模板类的声明和实现放在一起！
+```
+
 
 
 
