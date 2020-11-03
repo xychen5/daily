@@ -442,6 +442,8 @@ sh
 
 # 将文件名转小写
 for i in $(ls); do cp ${i} ../lowerCaseImages/${i,,}; done
+
+# openMVS贴图使用方式:
 F:\BASE_ENV\forOpenMVS\build\bin\x64\Release\InterfaceVisualSFM.exe -i result.out -o result.mvs
 F:\BASE_ENV\forOpenMVS\build\bin\x64\Release\TextureMesh.exe --mesh-file result_dense_mesh_simple.ply -i result.mvs -o result.ply
 ```
@@ -453,8 +455,71 @@ least recently used(will be discard)
 务必将模板类的声明和实现放在一起！
 ```
 
+## 2020/11/02 - 11/03
 
+### 1 编译MVE
+参考：[https://github.com/simonfuhrmann/mve/wiki/Build-Instructions-for-Windows](https://github.com/simonfuhrmann/mve/wiki/Build-Instructions-for-Windows)
+参考该链接完成编译即可，主要问题在于若下载很慢，可能需要你手动将文件下载到对应目录，其次：
+__F:\BASE_ENV\forMVE_TEXRecon\mve\3rdparty\qt5\src\qt5\qtbase\qmake\generators\win32\msvc_vcproj.cpp__ 里说明，19版本不支持，使用15以及以上工具编译：
+```cpp
+QT_BEGIN_NAMESPACE
+// Filter GUIDs (Do NOT change these!) ------------------------------
+const char _GUIDSourceFiles[]          = "{4FC737F1-C7A5-4376-A066-2A32D752A2FF}";
+const char _GUIDHeaderFiles[]          = "{93995380-89BD-4b04-88EB-625FBE52EBFB}";
+const char _GUIDGeneratedFiles[]       = "{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}";
+const char _GUIDResourceFiles[]        = "{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}";
+const char _GUIDLexYaccFiles[]         = "{E12AE0D2-192F-4d59-BD23-7D3FA58D3183}";
+const char _GUIDTranslationFiles[]     = "{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}";
+const char _GUIDFormFiles[]            = "{99349809-55BA-4b9d-BF79-8FDBB0286EB3}";
+const char _GUIDExtraCompilerFiles[]   = "{E0D8C965-CC5F-43d7-AD63-FAEF0BBC0F85}";
+const char _GUIDDeploymentFiles[]      = "{D9D6E243-F8AF-46E4-B9FD-80ECBC20BA3E}";
+const char _GUIDDistributionFiles[]    = "{B83CAF91-C7BF-462F-B76C-EA11631F866C}";
+QT_END_NAMESPACE
+```
+两次使用的编译命令：
+```sh
+cmake -G "Visual Studio 14 Win64" .
+```
 
+### 2 编译MVS-Texturing (texrecon)
+- 2.1 下载tbb库：[https://github.com/oneapi-src/oneTBB/releases/tag/v2020.3](https://github.com/oneapi-src/oneTBB/releases/tag/v2020.3)
+将之前编译的mve中的库和tbb都放到texrecon/3rdparty下面：
 
+- 2.2 下载MVS-Texturing(和mve同级目录)使用分支：*__cmake__* -> [https://github.com/andre-schulz/mvs-texturing/tree/cmake](https://github.com/andre-schulz/mvs-texturing/tree/cmake)
+配置完成以后，jpeg，tiff，png，zlib，mve_util的库需要在生成texrecon项目的时候在其属性中配置连接器对于这些库输入(会出现link err2019)：
+```sh
+cmake . ..\ `
+-G "Visual Studio 14 Win64" `
+-DMVE_INCLUDE_DIRS="F:\BASE_ENV\forMVE_TEXRecon\mve\libs" `
+-DTBB_ROOT_DIR="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\tbb" `
+-DTBB_INCLUDE_DIRS="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\tbb\include" `
+-DTBB_LIBRARIES="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\tbb\lib" `
+-DPNG_PNG_INCLUDE_DIR="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\include" `
+-DPNG_LIBRARY="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\lib" `
+-DZLIB_INCLUDE_DIR="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\include" `
+-DZLIB_LIBRARY="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\lib" `
+-DJPEG_INCLUDE_DIR="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\include" `
+-DJPEG_LIBRARY="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\lib" `
+-DTIFF_INCLUDE_DIR="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\include" `
+-DTIFF_LIBRARY="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\lib"
+```
+- 2.3 编译完成后，需要在texrecon.exe同级目录加入：
+```log
+jpeg62.dll*
+libpng16.dll*
+tiff.dll*
+zlib.dll*
+```
+__注意： -1，为了适应我们的数据，需要对代码做一定的更改，给入的数据的flen必须是单位话以后的焦长。__
+__注意： -2，输入数据的yz需要反转。__
+__注意： -3，需要更改mve中的camera代码，在更改以后注意将对应的库替换掉，然后重新编译。或者修改输入的每张图片的相机参数，将其flen除以max(wight, height)__
 
+- 2.4 texrecon使用方式：
+```sh
+# 使用如下脚本获得mvs-texture(texrecon)规定的数据格式。
+sh turnYZ_in_camera_rot_and_translation.sh result.out camArgs 5433
+
+# 运行该程序，注意：在windows下使用scene_dir，不要使用相对路径，使用绝对路径
+F:/BASE_ENV/forMVE_TEXRecon/mvs-texturing/build/apps/texrecon/Release/texrecon.exe  --skip_geometric_visibility_test  F:/dataSets/1011OpenMVS/texrecon/scene201103/ result_dense_mesh_refined.ply textured
+```
 
