@@ -1,3 +1,9 @@
+## u did
+1, 读写OSGB的代码： D:\OSG_PRJ\TryOsg
+2, LRUCache：位于台式机的AI3d项目里: F:\prjs\AI3D1.1\SourceCode
+3, boundingBoxEdit：位于台式机的: F:\prjs\editBBox\recon_3d
+
+
 ## 2020/10/09
 替换windows路径
 ```sh
@@ -139,7 +145,6 @@ images/*.JPG                  # 图片
 /home/ld/prjs/recon3d/texRecon/texrecon/cmake-build-debug/apps/texrecon/texrecon scene1006 result_dense_mesh_refined.ply textured2 --skip_geometric_visibility_test
 ```
 
-
 ## 2020/10/13
 margin probality
 
@@ -191,11 +196,7 @@ configure: summary of build options:
   Version:           GNU MP 6.2.0
   Host type:         skylake-pc-cygwin
   ABI:               64
-<<<<<<< HEAD
-  Install prefix:    /usr/local #说明会将库安装到该目录下，这和linux是很相似的
-=======
   Install prefix:    /home/chenxy/mylibs/newTry/gmp-6.2.0/build/static
->>>>>>> 1136129454eb59dc97d69399c9184870bce08479
   Compiler:          gcc
   Static libraries:  yes
   Shared libraries:  no
@@ -430,8 +431,7 @@ SET (JPEG_INCLUDE_DIR "F:/BASE_ENV/forOpenMVS/jpegsr9")
 SET (JPEG_LIBRARY "F:/BASE_ENV/forOpenMVS/jpegsr9/libjpeg.lib")
 
 ### 1.1 命令行调用OpenMVS
-sh
-```
+```sh
 # 依赖于opencv的几个dll库
 -a----       2020/10/24     20:22        3063296 opencv_calib3d450.dll
 -a----       2020/10/29      9:50       17019904 opencv_core450.dll
@@ -480,7 +480,6 @@ QT_END_NAMESPACE
 ```sh
 cmake -G "Visual Studio 14 Win64" .
 ```
-
 ### 2 编译MVS-Texturing (texrecon)
 - 2.1 下载tbb库：[https://github.com/oneapi-src/oneTBB/releases/tag/v2020.3](https://github.com/oneapi-src/oneTBB/releases/tag/v2020.3)
 将之前编译的mve中的库和tbb都放到texrecon/3rdparty下面：
@@ -523,3 +522,329 @@ sh turnYZ_in_camera_rot_and_translation.sh result.out camArgs 5433
 F:/BASE_ENV/forMVE_TEXRecon/mvs-texturing/build/apps/texrecon/Release/texrecon.exe  --skip_geometric_visibility_test  F:/dataSets/1011OpenMVS/texrecon/scene201103/ result_dense_mesh_refined.ply textured
 ```
 
+## 2020/11/13 - 11/17
+> ps: osg的PagedLod依赖于databasePager这个类(proxyNode也是依赖于该类)来实现动态调度，详情见：osg3 cookbook的321面。
+> ps: osg中使用行主序矩阵实现矩阵变换，所以对于点的变换，按照前乘实现。
+
+### 1 关于读取osgb文件的方法：
+主要修改PrimitiveFunctor，然后更改nodevisitor即可。
+A PrimitiveFunctor is used (in conjunction with osg::Drawable::accept (PrimitiveFunctor&)) to get access to the primitives that compose the things drawn by OSG.
+
+标注工具使用labelimage
+
+为什么运行cesium的官方的实例时，需要将使用到的属性和部件放到import中
+
+
+## 2020/11/21
+### 1 使用cesium加载gltf的模型报错：
+问题描述：
+在fregata项目中尝试添加贴地运动小车
+
+参考实现代码：
+https://sandcastle.cesium.com/?src=Clamp%20to%203D%20Tiles.html&label=3D%20Tiles
+
+错误日志： //实际上就是没有按照webpack的配置来配路径而已
+```log
+RuntimeError {name: "RuntimeError", message: "Failed to load model: Cesium_Air.glb↵Unexpected token < in JSON at position 0", stack: "Error↵    at new RuntimeError (webpack-internal://…e_modules/cesium/Source/ThirdParty/when.js:646:4)"}message: "Failed to load model: Cesium_Air.glb↵Unexpected token < in JSON at position 0"name: "RuntimeError"stack: "Error↵    at new RuntimeError (webpack-internal:///./node_modules/cesium/Source/Core/RuntimeError.js:40:11)↵    at eval (webpack-internal:///./node_modules/cesium/Source/Scene/ModelUtility.js:185:32)↵    at Promise.eval [as then] (webpack-internal:///./node_modules/cesium/Source/ThirdParty/when.js:216:33)↵    at eval (webpack-internal:///./node_modules/cesium/Source/ThirdParty/when.js:296:13)↵    at processQueue (webpack-internal:///./node_modules/cesium/Source/ThirdParty/when.js:646:4)↵    at _resolve (webpack-internal:///./node_modules/cesium/Source/ThirdParty/when.js:332:4)↵    at promiseReject (webpack-internal:///./node_modules/cesium/Source/ThirdParty/when.js:365:11)↵    at Promise.eval [as then] (webpack-internal:///./node_modules/cesium/Source/ThirdParty/when.js:216:33)↵    at eval (webpack-internal:///./node_modules/cesium/Source/ThirdParty/when.js:297:7)↵    at processQueue (webpack-internal:///./node_modules/cesium/Source/ThirdParty/when.js:646:4)"__proto__: 
+```
+
+## 2020/12/04 - 20/12/10
+### 0 git tips
+拉取最新代码：
+git stash
+git fetch origin master:temp
+git stash pop
+> do merge conflicts
+git add <conflicts files>
+...
+
+### 1 osg实现物体拖拽
+调用osg::Dragger即可；
+官方例子： [https://github.com/openscenegraph/OpenSceneGraph/blob/master/examples/osgmanipulator/osgmanipulator.cpp](https://github.com/openscenegraph/OpenSceneGraph/blob/master/examples/osgmanipulator/osgmanipulator.cpp)
+
+osg实现相交代码：
+```cpp
+bool View::computeIntersections(float x,float y, osgUtil::LineSegmentIntersector::Intersections& intersections, osg::Node::NodeMask traversalMask)
+{
+    float local_x, local_y;
+    const osg::Camera* camera = getCameraContainingPosition(x, y, local_x, local_y);
+
+    OSG_INFO<<"computeIntersections("<<x<<", "<<y<<") local_x="<<local_x<<", local_y="<<local_y<<std::endl;
+
+    if (camera) return computeIntersections(camera, (camera->getViewport()==0)?osgUtil::Intersector::PROJECTION : osgUtil::Intersector::WINDOW, local_x, local_y, intersections, traversalMask);
+    else return false;
+}
+
+bool View::computeIntersections(const osg::Camera* camera, osgUtil::Intersector::CoordinateFrame cf, float x,float y, const osg::NodePath& nodePath, osgUtil::LineSegmentIntersector::Intersections& intersections,osg::Node::NodeMask traversalMask)
+{
+    if (!camera || nodePath.empty()) return false;
+
+    osg::Matrixd matrix;
+    if (nodePath.size()>1)
+    {
+        osg::NodePath prunedNodePath(nodePath.begin(),nodePath.end()-1);
+        matrix = osg::computeLocalToWorld(prunedNodePath);
+    }
+
+    matrix.postMult(camera->getViewMatrix());
+    matrix.postMult(camera->getProjectionMatrix());
+
+    double zNear = -1.0;
+    double zFar = 1.0;
+    if (cf==osgUtil::Intersector::WINDOW && camera->getViewport())
+    {
+        matrix.postMult(camera->getViewport()->computeWindowMatrix());
+        zNear = 0.0;
+        zFar = 1.0;
+    }
+
+    osg::Matrixd inverse;
+    inverse.invert(matrix);
+
+    osg::Vec3d startVertex = osg::Vec3d(x,y,zNear) * inverse;
+    osg::Vec3d endVertex = osg::Vec3d(x,y,zFar) * inverse;
+
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > picker = new osgUtil::LineSegmentIntersector(osgUtil::Intersector::MODEL, startVertex, endVertex);
+
+    osgUtil::IntersectionVisitor iv(picker.get());
+    iv.setTraversalMask(traversalMask);
+    nodePath.back()->accept(iv);
+
+    if (picker->containsIntersections())
+    {
+        intersections = picker->getIntersections();
+        return true;
+    }
+    else
+    {
+        intersections.clear();
+        return false;
+    }
+}
+```
+
+
+### 2 自己实现拖拽效果
+```cpp
+	//used for drag the bounding box
+	//osg::ref_ptr<osgViewer::View> pViewer = NULL;
+	//Scene *                       pScene = NULL;
+	bool                          ifPicked = false;       // if a object is picked
+	osg::MatrixTransform *        pPickedObject = NULL;   // the picked object 
+	bool                          lButtonDown = false;
+	bool                          rButtonDown = false;
+	osg::Vec3                     firstIntersectionPoint; // when picking obj, the first intersect point
+	float                         z;                      // firstIntersectionPoint's z value in frustrum space
+	osg::Vec3                     stPoint;                // drag start point
+	osg::Vec3                     endPoint;               // drag end point
+	osg::Matrix                   stPos;                  // starting pos
+	
+
+	void pickByRay(float x, float y);
+	osg::Vec3 screen2World(float x, float y);
+	osg::Vec3 world2Screen(osg::Vec3& wV);
+
+
+//事件处理函数
+bool CPickHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& us)
+{
+	osgViewer::Viewer *viewer = dynamic_cast<osgViewer::Viewer*>(&us);
+	if (!viewer)//如果转换失败则直接退出
+	{
+		return false;
+	}
+	CString s;
+	switch (ea.getEventType())
+	{
+		case osgGA::GUIEventAdapter::PUSH: {
+			if (viewer) {
+				int button = ea.getButton();
+				if (button == osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON) {
+					lButtonDown = true;
+					//MessageBox(NULL, "push doing!1", "hint", MB_OK);
+					pickByRay(ea.getX(), ea.getY());
+					//MessageBox(NULL, "push doing!2", "hint", MB_OK);
+					if (pPickedObject) {
+						stPoint = screen2World(ea.getX(), ea.getY());
+						stPos = pPickedObject->getMatrix();
+						//MessageBox(NULL, "push doing!2.1", "hint", MB_OK);
+						// when push and drag, we want to shut down the camera manipulator
+						// till the drag motion is done
+						mViewer->setCameraManipulator(NULL);
+						//mViewer->getCameraManipulator()-
+						//mViewer->setUpdateOperations
+					}
+				}
+				else {
+					lButtonDown = false;
+				}
+			}
+		return false;
+	    }
+	    case  osgGA::GUIEventAdapter::DRAG: {
+	    	if (pPickedObject&&lButtonDown)	{
+	    		endPoint = screen2World(ea.getX(), ea.getY());
+				stPoint.z() = endPoint.z() = z;
+	    		float dx = endPoint.x() - stPoint.x();
+	    		float dy = endPoint.y() - stPoint.y();
+	    		//float dz = endPoint.z() - stPoint.z() = 0;
+	    		std::cout << dx << "  " << dy << std::endl;
+	    		if (fabs(dx) + fabs(dy) < 0.06) {
+	    		    std::cout << "small movement" << dx << "  " << dy << std::endl;
+	    		}
+	    		pPickedObject->setMatrix(stPos * osg::Matrix::translate(dx, 0, dy));
+				//cosg->mViewer->setCameraManipulator(cosg->trackball, false);
+				//MessageBox(NULL, "drag doing!", "hint", MB_OK);
+	    	}
+	    	return false;
+	    }
+	    case osgGA::GUIEventAdapter::RELEASE: {
+			cosg->mViewer->setCameraManipulator(cosg->trackball, false);
+	    	pPickedObject = false;
+	    	return false;
+	    }
+	    case (osgGA::GUIEventAdapter::DOUBLECLICK): {
+	    	MessageBox(NULL, "double click doing!", 0, MB_OK);
+	    }
+	default:
+		return false;
+	}
+}
+
+void CPickHandler::pickByRay(float x, float y) {
+	osgUtil::LineSegmentIntersector::Intersections intersections;
+
+	if (mViewer->computeIntersections(x, y, intersections)) {
+		// get the first intersected object
+		osgUtil::LineSegmentIntersector::Intersections::iterator hitr = intersections.begin();
+		osg::NodePath getNodePath = hitr->nodePath;
+		
+		// find the object's matrix transform
+		for (int i = getNodePath.size() - 1; i >= 0; --i) {
+			osg::MatrixTransform* mt = dynamic_cast<osg::MatrixTransform*>(getNodePath[i]);
+			if (mt == NULL) {
+				continue;
+			}
+			else {
+				pPickedObject = mt;
+				ifPicked = true;
+			    firstIntersectionPoint = hitr->getLocalIntersectPoint(); //in world 
+				z = world2Screen(firstIntersectionPoint).z(); // in screen
+				//MessageBox(NULL, tmp, "hint", MB_OK);
+			}
+		}
+	}
+	else {
+		ifPicked = false;
+	}
+}
+osg::Vec3 CPickHandler::screen2World(float x, float y)
+{
+	osg::Vec3 vec3;
+	osg::ref_ptr<osg::Camera> camera = mViewer->getCamera();
+	osg::Vec3 vScreen(x, y, 0);
+	osg::Matrix mVPW = camera->getViewMatrix() * camera->getProjectionMatrix() * camera->getViewport()->computeWindowMatrix();
+	osg::Matrix invertVPW;
+	invertVPW.invert(mVPW);
+	vec3 = vScreen * invertVPW;
+	return vec3;
+}
+
+osg::Vec3 CPickHandler::world2Screen(osg::Vec3& wV) {
+	osg::ref_ptr<osg::Camera> camera = mViewer->getCamera();
+	osg::Matrix mVPW = camera->getViewMatrix() * camera->getProjectionMatrix() * camera->getViewport()->computeWindowMatrix();
+	return wV * mVPW;
+}
+//osg::Vec3 CPickHandler::screen2World(float x, float y) {
+//	osg::Vec3 point(0, 0, 0);
+//	osgUtil::LineSegmentIntersector::Intersections intersections;
+//	if (mViewer->computeIntersections(x, y, intersections)) {
+//		osgUtil::LineSegmentIntersector::Intersections::iterator itr = intersections.begin();
+//		point[0] = itr->getWorldIntersectPoint().x();
+//		point[1] = itr->getWorldIntersectPoint().y();
+//		point[2] = itr->getWorldIntersectPoint().z();
+//	}
+//	return point;
+//}
+```
+
+```cpp
+/*绘制并渲染几何体的主要步骤：
+1.创建各种向量数据，如顶点、纹理坐标、颜色、法线。顶点数据按照逆时针顺序添加，以确保背面剔除的正确
+2.实例化几何对象osg::Geometry，设置顶点坐标数组、纹理坐标数组、颜色数组、法线数组、绑定方式和数据解析
+3.加入叶节点绘制并渲染
+*/
+
+osg::ref_ptr<osg::Node> createQuad(osg::ref_ptr<osg::Vec3Array>& v)
+{
+	//创建一个叶节点对象
+	osg::ref_ptr<osg::Geode> geode = new osg::Geode();
+
+	//创建一个几何体对象
+	osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
+
+	////创建顶点数组，注意顶点的添加顺序是逆时针的
+	//osg::ref_ptr<osg::Vec3Array> v = new osg::Vec3Array();
+	////添加数据
+	//v->push_back(osg::Vec3(0.0f, 0.0f, 0.0f));
+	//v->push_back(osg::Vec3(1.0f, 0.0f, 0.0f));
+	//v->push_back(osg::Vec3(1.0f, 0.0f, 1.0f));
+	//v->push_back(osg::Vec3(0.0f, 0.0f, 1.0f));
+	//设置顶点数据setVertexArray(Array *array)
+	geom->setVertexArray(v.get());
+
+	//创建纹理数组
+	osg::ref_ptr<osg::Vec2Array> vt = new osg::Vec2Array();
+	//添加数据
+	vt->push_back(osg::Vec2(0.0f, 0.0f));
+	vt->push_back(osg::Vec2(1.0f, 0.0f));
+	vt->push_back(osg::Vec2(1.0f, 1.0f));
+	vt->push_back(osg::Vec2(0.0f, 1.0f));
+	//设置纹理坐标数组setTexCoordArray(unsigned int unit, Array *)参数纹理单元/纹理坐标数组
+	geom->setTexCoordArray(0, vt.get());
+
+	//数据绑定：法线、颜色，绑定方式为：
+	//BIND_OFF不启动用绑定/BIND_OVERALL绑定全部顶点/BIND_PER_PRIMITIVE_SET单个绘图基元绑定/BIND_PER_PRIMITIVE单个独立的绘图基元绑定/BIND_PER_VERTIE单个顶点绑定
+	//采用BIND_PER_PRIMITIVE绑定方式，则OSG采用glBegin()/glEnd()函数进行渲染，因为该绑定方式为每个独立的几何图元设置一种绑定方式
+
+	//创建颜色数组
+	osg::ref_ptr<osg::Vec4Array> vc = new osg::Vec4Array();
+	//添加数据
+	vc->push_back(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+	vc->push_back(osg::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	vc->push_back(osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+	vc->push_back(osg::Vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	//设置颜色数组setColorArray(Array *array)
+	geom->setColorArray(vc.get());
+	//设置颜色的绑定方式setColorBinding(AttributeBinding ab)为单个顶点
+	geom->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+
+	//创建法线数组
+	osg::ref_ptr<osg::Vec3Array> nc = new osg::Vec3Array();
+	//添加法线
+	nc->push_back(osg::Vec3(0.0f, -1.0f, 0.0f));
+	//设置法线数组setNormalArray(Array *array)
+	geom->setNormalArray(nc.get());
+	//设置法线的绑定方式setNormalBinding(AttributeBinding ab)为全部顶点
+	geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
+
+	//添加图元，绘制基元为四边形
+	//数据解析，即指定向量数据和绑定方式后，指定渲染几何体的方式，不同方式渲染出的图形不同，即时效果相同，可能面数或内部机制等也有区别，函数为：
+	//bool addPrimitiveSet(PrimitiveSet *primitiveset)参数说明：osg::PrimitiveSet是无法初始化的虚基类，因此主要调用它的子类指定数据渲染，最常用为osg::DrawArrays
+	//osg::DrawArrays(GLenum mode, GLint first, GLsizei count)参数为指定的绘图基元、绘制几何体的第一个顶点数在指定顶点的位置数、使用的顶点的总数
+	//PrimitiveSet类继承自osg::Object虚基类，但不具备一般一般场景中的特性，PrimitiveSet类主要封装了OpenGL的绘图基元，常见绘图基元如下
+	//POINTS点/LINES线/LINE_STRIP多线段/LINE_LOOP封闭线
+	//TRIANGLES一系列三角形(不共顶点)/TRIANGLE_STRIP一系列三角形(共用后面两个顶点)/TRIANGLE_FAN一系列三角形，顶点顺序与上一条语句绘制的三角形不同
+	//QUADS四边形/QUAD_STRIP一系列四边形/POLYGON多边形
+	geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS, 0, 4));
+
+	//添加到叶节点
+	geode->addDrawable(geom.get());
+
+	return geode.get();
+}
+```
+
+blog:
+1. 自己写handler实现拖拽
+2. 使用官方的dragger来实现拖拽
