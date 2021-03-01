@@ -1,3 +1,8 @@
+## vim Tips
+### 1 move
+ctr+o / ctr+i : 跳转到上/下一次
+ctr+]         : 进入函数
+
 ## 2020/10/09
 替换windows路径
 ```sh
@@ -191,11 +196,7 @@ configure: summary of build options:
   Version:           GNU MP 6.2.0
   Host type:         skylake-pc-cygwin
   ABI:               64
-<<<<<<< HEAD
-  Install prefix:    /usr/local #说明会将库安装到该目录下，这和linux是很相似的
-=======
   Install prefix:    /home/chenxy/mylibs/newTry/gmp-6.2.0/build/static
->>>>>>> 1136129454eb59dc97d69399c9184870bce08479
   Compiler:          gcc
   Static libraries:  yes
   Shared libraries:  no
@@ -503,6 +504,7 @@ cmake . ..\ `
 -DTIFF_INCLUDE_DIR="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\include" `
 -DTIFF_LIBRARY="F:\BASE_ENV\forMVE_TEXRecon\mvs-texturing\3rdparty\png_tiff_zip_qt5\lib"
 ```
+
 - 2.3 编译完成后，需要在texrecon.exe同级目录加入：
 ```log
 jpeg62.dll*
@@ -523,3 +525,119 @@ sh turnYZ_in_camera_rot_and_translation.sh result.out camArgs 5433
 F:/BASE_ENV/forMVE_TEXRecon/mvs-texturing/build/apps/texrecon/Release/texrecon.exe  --skip_geometric_visibility_test  F:/dataSets/1011OpenMVS/texrecon/scene201103/ result_dense_mesh_refined.ply textured
 ```
 
+## 2020/11/10
+### 1 MRF-based mosaicing(贴图)
+主要参考:
+[http://www.robots.ox.ac.uk/~vilem/SeamlessMosaicing.pdf](http://www.robots.ox.ac.uk/~vilem/SeamlessMosaicing.pdf)
+主要思想：
+mrf的每一个节点不是图片的像素，而是mesh中的三角片，然后定义好能量方程，LBP就是使这些能量方程迅速收敛的优化算法。
+所谓的能量方程：
+- 1 这个view对于这个face看的有多准，多清楚
+- 2 face和它周围的faces（周围的faces可能来自于不同的views）之间，会有色差，这也是一方面的能量
+
+
+## 2020/12/25 - 
+### 0 模型精度渲染问题
+meshlab读取模型时渲染的默认精度是float
+osg渲染时也是float，这就导致了，转化成大地坐标系之后，比如3301412.7829会变成3301412.25之类的数据，
+导致模型出现光栅效果。
+如果需要读写自己的模型格式，考虑使用osg的注册器，注册自己模型读写方法。
+
+### 1 从贴图中恢复出坐标
+恢复坐标在重建软件中实现，然后转到体积测量的软件。
+
+### 2 计算体积等(包括距离，面积，体积计算)功能
+基于osgb的实现，然后解决0号问题
+
+> fft2d: https://www.robots.ox.ac.uk/~az/lectures/ia/lect2.pd
+>        https://www.zhihu.com/question/22611929/answer/341436331
+
+### 3 实现步骤
+- 1 东湖高新数据，哪些标记点，出现在哪些图片中，这些标记点的像素坐标:_config in yaml, transfer data in json_
+```yaml
+dataType: 文件表示的数据类型
+metaData: 描述数据
+imagesDir: 存储图片的目录
+imageNameList: 图片名的列表
+targetPointsAnnotation:
+- point1:               # 第一个打标点的标注的像素坐标信息
+    shownInImages:      # 第一个打标点出现在哪些图片中
+    - 1.jpg
+    - 2.jpg
+    pixelPositions:     # 第一个打标点在出现的图片中对应的坐标
+    - x: -2             # 对于该点对，则对应于point1在1.jpg中出现的坐标，图片的像素坐标以图像的中心点为原点
+      y: -3
+    - x: -2             # 对于该点对，则对应于point1在2.jpg中出现的坐标
+      y: -3
+- point2:               # 第二个打标点存储的像素坐标信息
+    shownInImages:
+    - 2.jpg
+    - 3.jpg
+    pixelPositions:
+    - x: -2
+      y: -3
+    - x: -2
+      y: -3
+
+```
+存储的信息格式如下列json所示，存储要求见上面的yaml注释
+```json
+{
+  "dataType": "pixels annotations",
+  "metaData": "this file try to store the information of the target points's pixel Positions on images where they may be on",
+  "imagesDir": "D:\\images",
+  "imagesNameList": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+  ],
+  "targetPointsAnnotation": [
+    {
+      "point1": {
+        "shownInImages": [
+          "1.jpg",
+          "2.jpg"
+        ],
+        "pixelPositions": [
+          {"x": -2, "y": -3},
+          {"x": -2, "y": -3}
+        ]
+      }
+    },
+    {
+      "point2": {
+        "shownInImages": [
+          "2.jpg", 
+          "3.jpg"
+        ],
+        "pixelPositions": [
+          {"x": -2, "y": -3},
+          {"x": -2, "y": -3}
+        ]
+      }
+    }
+  ]
+}
+```
+
+
+***
+## todo
+- 1 **write blogs:**
+
+| no | content | done? | address? |
+| - | - | - | - |
+| 1 | osg dragger |  |  |
+| 2 | 4-set cache | done |  |
+| 3 | 2d-FT image compression |  |  |
+| 4 | cache conherence (snoopy way) |  |  |
+| 5 | cesium groundVehicle ;done; | done |  |
+| 6 | python 3d visulization |  |  |
+| 7 | gruaduate final prj  |  |  |
+- 2 see @Line 544 |  |  |
+***
+## funny
+DY11字体
+
+***
