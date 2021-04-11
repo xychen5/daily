@@ -931,7 +931,25 @@ targetPointsAnnotation:
 ```
 
 
-## 2020/03/01 - 
+## 2020/03/01 - 2020/03/26
+
+### 1 osgb的内容组织以及读写
+
+
+### 2 贴图的原理
+### 2.0 使用phab比较两次提交的方法：
+```
+git log
+git diff 808ed23da88251d7ff8df369c17441a574b00a98 1ebb2439e14bfe9f46e68c3b27c4807477a3db55 > a.txt
+在phab中Diffrential中创建diff： 粘贴进入a.txt的代码即可
+```
+
+## todo
+- 1 cpp生命周期的野指针问题
+
+- 2 phab比较两次提交
+
+
 
 
 
