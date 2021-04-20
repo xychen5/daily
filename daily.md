@@ -944,12 +944,25 @@ git diff 808ed23da88251d7ff8df369c17441a574b00a98 1ebb2439e14bfe9f46e68c3b27c480
 在phab中Diffrential中创建diff： 粘贴进入a.txt的代码即可
 ```
 
-## todo
-- 1 cpp生命周期的野指针问题
+## 2020/04/13
 
-- 2 phab比较两次提交
+### 1 修改模型：
+```sh
+# 本来apaqi.ive导弹模型头垂直屏幕向里面，之后头朝上，机身平行于屏幕
+osgconv apaqi.ive apaqi.obj
+# 绕着(0,1,1)旋转模型180度即可
+osgconv -o 180-0,1,1 apaqi.ive apaqi_x-90_y180.obj
 
+# 自动批量转换成gltf：
+## step1: from ive to obj
+for modelName in $(ls models | grep ive | sed s/.ive//g); do
+    osgconv models/${modelName}.ive -o 180-0,1,1 models/${modelName}.obj
+done;
 
-
+## step2： from obj to gltf
+for modelName in $(ls models | grep ive | sed s/.ive//g); do
+    node bin/obj2gltf.js -i models/${modelName}.obj -o models/${modelName}.gltf
+done;
+```
 
 
