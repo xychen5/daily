@@ -3,6 +3,24 @@
 ctr+o / ctr+i : 跳转到上/下一次
 ctr+]         : 进入函数
 
+## latex
+### 1 特殊符号
+
+梯度：$\nabla$
+
+偏导：$\partial$
+
+省略号：$\cdots$
+
+单个为$\cdot$
+
+手写体：$\mathcal{handscript}$
+
+粗体：$\bold{asdf}$
+
+数学空心：$\mathbb{E}$
+
+空集：$\varnothing$
 
 ## 2020/10/09
 替换windows路径
@@ -412,6 +430,10 @@ boost::iostreams::detail::zlib_base::zlib_base(void)" (??0zlib_base@detail@iostr
 - 1: gmp和mpfr库有问题 -> 使用cgal的setup安装，然后进入auxiliary/gmp中有gmp和mpfr的库。
 - 2: 编译的boost的iostream库with zlib有问题，zlib说有些符号无法解析:
   - 注意： boost的编译，会将编译结果存在build_dir（bin.v2）中然后拷贝到指定的lib目录下，这就造成，如果需要新编库，必须手动删除build_dir中生成的库文件，否则新编译库是不会overwrite的，而是直接从build_dir中复制到指定的lib目录下，于是： 编译带有zlib的库的时候，需要先将iostream库删除（指定的lib目录和build_dir中的库），然后重新编译。
+- 3 .\b2.exe `
+    --stage-dir="Z:\BASE_ENV\forOpenMVS\boost_1_62_0\vc14" `
+    --adress-model=64 --build-type=complete
+    低版本的默认使用gcc编译。
 
 
 ## 2020/10/29
@@ -965,4 +987,1542 @@ for modelName in $(ls models | grep ive | sed s/.ive//g); do
 done;
 ```
 
+## 2021/04/22 shit hexo
+### 1 github初始化仓库 
+初始化git repo: 地址如下
+https://github.com/xychen5/xychen5.github.io.git
 
+### 2 安装相关依赖
+```sh
+npm install -g hexo
+hexo init blogs
+cd blogs
+npm install -s hexo-theme-next # 安装主题
+npm install --save hexo-deployer-git # 安装专用git工具
+hexo s # 本地测试一下是否能正常运行
+```
+
+### 3 部署 
+编辑blogs/_config.yml的末尾如下：
+```yml
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: next
+
+# Deployment
+## Docs: https://hexo.io/docs/one-command-deployment
+deploy:
+  type: git
+  repo: https://github.com/xychen5/xychen5.github.io.git
+  branch: main
+```
+部署如下：
+```sh
+hexo clean && hexo g -d
+cp .\node_modules\hexo-theme-next\_config.yml ./_config.next.yml # 将next的配置放到项目根目录，避免编辑第三方库里的yml
+```
+
+### 4 博客写作分类以及标签以及使用技巧
+- 1 https://linlif.github.io/2017/05/27/Hexo%E4%BD%BF%E7%94%A8%E6%94%BB%E7%95%A5-%E6%B7%BB%E5%8A%A0%E5%88%86%E7%B1%BB%E5%8F%8A%E6%A0%87%E7%AD%BE/
+- 2 官方guide: [https://hexo.io/docs/writing](https://hexo.io/docs/writing)
+
+### 5 将hexo生成的网站(会推到xychen5.github.io库里)和自己写的markdown文件分开
+- 1 初始化source库，然后将其推到某个远程仓库(github,gitlab,gitee...etc)
+```sh
+cd source
+git init
+git remote add origin <你的空repo地址>
+git add .
+git commit -m 'init'
+git push -u origin master
+```
+- 2 向blogs/package.json中添加发布脚本：(添加了 npm run pub对应的pub)， 若整个博文没有任何改变，运行该命令会报错
+
+- 2 然后在blogs/package.json加入：
+```sh
+  "scripts": {
+    "build": "hexo generate",
+    "clean": "hexo clean",
+    "deploy": "hexo deploy",
+    "server": "hexo server",
+    "pub": "cd source && git add ./* && git commit -m 'upate' && git push && cd .. && hexo clean && hexo g -d"
+  },
+```
+
+### 6 使用GitHub的图片床
+主要参考：[https://github.com/XPoet/picx](https://github.com/XPoet/picx)
+生成toke后记得复制: https://github.com/settings/tokens
+
+## 2021/04/26
+### 1 wsl迁移
+```
+首先查看所有分发版本
+wsl -l --all  -v
+  NAME STATE VERSION
+ * Ubuntu-20.04 Running 2
+
+导出分发版为tar文件到d盘
+wsl --export Ubuntu-20.04 d:\ubuntu20.04.tar
+
+注销当前分发版
+wsl --unregister Ubuntu-20.04
+
+重新导入并安装分发版在d:\ubuntu
+wsl --import Ubuntu-20.04 d:\ubuntu d:\ubuntu20.04.tar --version 2
+
+设置默认登陆用户为安装时用户名
+ubuntu2004 config --default-user Username
+
+删除tar文件(可选)
+del d:\ubuntu20.04.tar
+```
+### 2 切换内核
+```
+下载安装: https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+wsl -l -v
+wsl --set-version Ubuntu-20.04 2
+wsl -l -v 
+```
+
+## 2021/04/28
+### 1 hexo渲染latex
+```
+npm uninstall hexo-math --save
+npm install hexo-renderer-mathjax --save
+
+编辑hexo的_config.yml的配置:
+# MathJax Support
+mathjax:
+  enable: true
+  per_page: true
+
+对需要渲染的博文加入matxjax支持：
+---
+title: Hexo渲染LaTeX公式关键
+date: 2020-09-30 22:27:01
+mathjax: true
+--
+```
+
+## 2021/05/06 编译colmap
+
+### 1 前期准备
+#### 1 github上下载colmap稳定版源码: 
+https://github.com/colmap/colmap/archive/refs/tags/3.6.zip
+之后解压进入，执行： git init
+
+#### 2 确保编译环境
+- 1 确保你的vs不是vs2019 16.9.3以及以上，否则会有奇怪的cuda错误, 解决方案是：
+  - 1.1 将vs2019卸载
+  - 1.2 去[https://docs.microsoft.com/en-us/visualstudio/releases/2019/history#installing-an-earlier-release](https://docs.microsoft.com/en-us/visualstudio/releases/2019/history#installing-an-earlier-release)下载vs2019 16.8.5，然后安装v140，v141的生成工具
+- 2 如果本篇博客所有内容都详细读完，任然无法成功编译colmap，那就装VS2015，然后用他的生成工具（cmake -G 参数指定编译器版本，命令行里输入cmake -G），项目打开还是可以用vs2019的。
+
+然后将编译器加入环境变量：
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.16.27023\bin\HostX64\x64
+输入cl能看到输出即可.
+
+### 2 依赖安装
+#### 2.1 boost 直接安装(推荐下载vs2015版本，我用的是v_1_73)
+
+[https://boostorg.jfrog.io/artifactory/main/release/1.64.0/binaries/](https://boostorg.jfrog.io/artifactory/main/release/1.64.0/binaries)
+```sh
+boost使用源码编译的静态方式编译：
+```sh
+.\b2.exe  --toolset=msvc-14.2 `
+--address-model=64 `
+--architecture=x86 `
+--threading=multi `
+-sZLIB_SOURCE="F:\BASE_ENV\forOpenMVS\zlib-1.2.11" -sZLIB_INCLUDE="F:\BASE_ENV\forOpenMVS\zlib-1.2.11" `
+--with-iostreams --with-iostreams --with-log --with-program_options --with-graph --with-test --with-regex --with-filesystem `
+--link=static --runtime-link=shared --build-type=complete `
+stage --stagedir="F:\BASE_ENV\forOpenMVS\boost_1_66_0\msvc142_linkStatic_runShared" `
+```
+
+#### 2.2 安装GMP和MFPR
+- 0 不想要自己折腾： 参考： [https://github.com/emphasis87/libmpfr-msys2-mingw64](https://github.com/emphasis87/libmpfr-msys2-mingw64)，这里面应该有现成的库。
+- 1 安装Cygwin
+```sh
+Setup Environment
+Install Cygwin, add the following packages to the default installation: 
+
+gcc-core
+gcc-g++
+libgcc
+m4
+make #不知为何安装后在Cygwin根目录下搜不到make程序，见下面步骤2安装make
+cmake
+bash
+Add the following Environment Variable to the User PATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.15.26726\bin\Hostx64\x64
+This is so you can use the lib command. Your lib.exe may be located elsewhere.
+```
+安装好Cygwin以及一些依赖以后，在其根目录(方便说明记为： CygwinRoot="D:\CygwinRooto")下的bin/minnty.exe是其终端入口，然后每次打开该终端，进入的是：$CygwinRoot/home/$(userName)， 运行"cd /"后就可以理解了； 
+
+- 2 下载并安装make
+  - 2.1 从如下网址下载make的源码，https://ftp.gnu.org/gnu/make/，然后解压
+  - 2.2 打开Cygwin64 Terminal命令行，进入源码根目录，然后运行：configure && ./build.sh
+  - 2.3 编译得到了make.exe后将其移动到Cygwin的bin目录下
+
+- 3 编译gmp
+运行两个： ./configure 和 make install
+```sh
+./configure --prefix=/home/chenxy/mylibs/newTry/gmp-6.2.0/build/static --enable-static --disable-shared
+configure: summary of build options:
+
+  Version:           GNU MP 6.2.0
+  Host type:         skylake-pc-cygwin
+  ABI:               64
+  Install prefix:    /home/chenxy/mylibs/newTry/gmp-6.2.0/build/static
+  Compiler:          gcc
+  Static libraries:  yes
+  Shared libraries:  no
+```
+编译结果（默认生成的是static的数据）：
+```log
+@nash-5 ~/mylibs/gmp-6.2.0
+$ ls /usr/local/include/
+gmp.h
+
+@nash-5 ~/mylibs/gmp-6.2.0
+$ ls /usr/local/lib/
+libgmp.a  libgmp.la  pkgconfig
+```
+生成动态连接库（注意： 动态连接库和静态连接库的.h文件不同，所以注意分成2个文件夹，至少对于gmp是如此）：
+```sh
+./configure --prefix=/home/chenxy/mylibs/gmp-6.2.0/build/shared --enable-shared --disable-static
+```
+- 4 编译mfpr（需要gmp的依赖，而且是动态连接库）
+进入mfpr的根目录：
+运行./configure：
+```log
+checking for gmp.h... no
+configure: error: gmp.h can't be found, or is unusable.
+```
+运行./configure --help
+```sh
+···
+  --with-gmp-include=DIR  GMP include directory
+  --with-gmp-lib=DIR      GMP lib directory
+···
+```
+所以：
+```sh
+./configure --prefix=/home/chenxy/mylibs/newTry/mpfr-4.1.0/build/static \
+--enable-static --disable-shared \
+--with-gmp-include=/home/chenxy/mylibs/newTry/gmp-6.2.0/build/static/include \
+--with-gmp-lib=/home/chenxy/mylibs/newTry/gmp-6.2.0/build/staic/lib
+
+make install
+```
+```sh
+./configure --prefix=/home/chenxy/mylibs/mpfr-4.1.0/build/static \
+--with-gmp-include=/home/chenxy/mylibs/gmp-6.2.0/build/static/include \
+--with-gmp-lib=/home/chenxy/mylibs/gmp-6.2.0/build/static/lib \
+--enable-static --disable-shared
+```
+
+#### 2.3 其他依赖build.py会帮你下载编译
+确保你能够流畅访问github，否则需要你自己下载然后修改build.py。
+
+### 3 编译colmap
+
+#### 3.1 对编译文件和某些源文件的修改如下：
+
+```diff
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7333a04..d73a6ad 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,8 +72,10 @@ endif()
+ 
+ if(BOOST_STATIC)
+     set(Boost_USE_STATIC_LIBS ON)
++    # message("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ using static boost", ${BOOST_STATIC})
+ else()
+     add_definitions("-DBOOST_TEST_DYN_LINK")
++    # message("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ using dll boost", ${BOOST_STATIC})
+ endif()
+ 
+ ################################################################################
+@@ -86,6 +88,7 @@ endif()
+ 
+ find_package(Ceres REQUIRED)
+ 
++set(Boost_DEBUG ON)
+ find_package(Boost REQUIRED COMPONENTS
+              program_options
+              filesystem
+diff --git a/scripts/python/build.py b/scripts/python/build.py
+index 89dff59..fe1e4c4 100644
+--- a/scripts/python/build.py
++++ b/scripts/python/build.py
+@@ -75,10 +75,12 @@ def parse_args():
+                         help="The path to the folder containing Boost, "
+                              "e.g., under Windows: "
+                              "C:/local/boost_1_64_0/lib64-msvc-12.0")
++    parser.add_argument("--boost_include_dir", default="F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140")
++    parser.add_argument("--boost_lib_dir", default="F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140/lib64-msvc-14.0")
+     parser.add_argument("--cgal_path", default="",
+                         help="The path to the folder containing CGAL, "
+                              "e.g., under Windows: C:/dev/CGAL-4.11.2/build")
+-    parser.add_argument("--cuda_path", default="",
++    parser.add_argument("--cuda_path", default="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.2",
+                         help="The path to the folder containing CUDA, "
+                              "e.g., under Windows: C:/Program Files/NVIDIA GPU "
+                              "Computing Toolkit/CUDA/v8.0")
+@@ -108,7 +110,7 @@ def parse_args():
+                         help="Whether to build unit tests")
+     parser.add_argument("--build_type", default="Release",
+                         help="Build type, e.g., Debug, Release, RelWithDebInfo")
+-    parser.add_argument("--cmake_generator", default="",
++    parser.add_argument("--cmake_generator", default="Visual Studio 14",
+                         help="CMake generator, e.g., Visual Studio 14")
+     parser.add_argument("--no_ssl_verification",
+                         dest="ssl_verification", action="store_false",
+@@ -429,8 +431,28 @@ def build_colmap(args):
+         extra_config_args.append(
+             "-DBOOST_ROOT={}".format(args.boost_path))
+         extra_config_args.append(
+-            "-DBOOST_LIBRARYDIR={}".format(args.boost_path))
+-
++            "-DBOOST_INCLUDEDIR={}".format(args.boost_include_dir))
++        extra_config_args.append(
++            "-DBOOST_LIBRARYDIR={}".format(args.boost_lib_dir))
++        # print("BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOST: ", extra_config_args)
++        # extra_config_args.append("-DBOOST_STATIC=ON")
++        # extra_config_args.append("-DBoost_USE_STATIC_LIBS=ON")
++        # extra_config_args.append("-DBoost_USE_MULTITHREADED=ON")
++        # extra_config_args.append("-DBoost_USE_STATIC_RUNTIME=ON")
++        # extra_config_args.append("-DBOOST_ALL_DYN_LINK=ON")
++    
++    # -DGMP_INCLUDE_DIR="F:\BASE_ENV\forOpenMVS\gmp_mpfr\include" `
++    # -DGMP_LIBRARIES="F:\BASE_ENV\forOpenMVS\gmp_mpfr\lib\libgmp-10.lib" `
++    # -DMPFR_INCLUDE_DIR="F:\BASE_ENV\forOpenMVS\gmp_mpfr\include" `
++    # -DMPFR_LIBRARIES="F:\BASE_ENV\forOpenMVS\gmp_mpfr\lib\libmpfr-4.lib" 
++    extra_config_args.append(
++        "-DGMP_INCLUDE_DIR={}".format("F:/BASE_ENV/forOpenMVS/gmp_mpfr/include"))
++    extra_config_args.append(
++        "-DGMP_LIBRARIES={}".format("F:/BASE_ENV/forOpenMVS/gmp_mpfr/lib/libgmp-10.lib"))
++    extra_config_args.append(
++        "-DMPFR_INCLUDE_DIR={}".format("F:/BASE_ENV/forOpenMVS/gmp_mpfr/include"))
++    extra_config_args.append(
++        "-DMPFR_LIBRARIES={}".format("F:/BASE_ENV/forOpenMVS/gmp_mpfr/lib/libmpfr-4.lib"))
+     if args.cuda_path != "":
+         extra_config_args.append(
+             "-DCUDA_TOOLKIT_ROOT_DIR={}".format(args.cuda_path))
+@@ -479,6 +501,8 @@ def build_post_process(args):
+                         os.path.basename(lapack_path)))
+ 
+         if args.qt_path:
++            print("copying !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", os.path.join(args.qt_path, "bin/Qt5Core.dll"))
++            print("copying !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", os.path.join(args.install_path, "lib/Qt5Core.dll"))
+             copy_file_if_not_exists(
+                 os.path.join(args.qt_path, "bin/Qt5Core.dll"),
+                 os.path.join(args.install_path, "lib/Qt5Core.dll"))
+diff --git a/src/retrieval/utils.h b/src/retrieval/utils.h
+index b99bf64..d773220 100644
+--- a/src/retrieval/utils.h
++++ b/src/retrieval/utils.h
+@@ -52,7 +52,8 @@ struct ImageScore {
+ template <int N, int kSigma = 16>
+ class HammingDistWeightFunctor {
+  public:
+-  static const size_t kMaxHammingDistance = static_cast<size_t>(1.5f * kSigma);
++  // static const size_t kMaxHammingDistance = static_cast<size_t>(1.5f * kSigma);
++  static const size_t kMaxHammingDistance = 24;
+ 
+   HammingDistWeightFunctor() {
+     // Fills the look-up table.
+
+(END)
+```
+
+#### 3.2 编辑CmakeList.txt
+set(Boost_DEBUG ON)，打开boost的调试信息，boost的链接最容易出问题。(以下的内容仅供了解，无需修改)
+
+**主要注意:** -DBoost_USE_STATIC_RUNTIME=ON 这个设置是指boost的库在使用cpp的runtime时候将会使用静态库，如果这个选项打开了，则需要往CmakeList.txt(colmap的根目录)中添加：
+```sh
+# set the used type of runtime lib to be static
+set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+```
+上面意味着运行时库调用时选择静态运行时库(vs中，在项目->cpp->代码生成中有MT/MD的配置), 而且对应的编译出来的boost库，编译时需要带上： --link=static --runtime-link=static --build-type=complete 参数;
+
+
+### 3.3 编译执行：
+注意我们使用静态的boost避免boost 的链接错误；
+```sh
+python scripts/python/build.py \
+    --build_path "F:/prjs/colmap-3.6/build" \
+    --colmap_path "F:/prjs/colmap-3.6" \
+    --boost_path "F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140" \
+    --boost_include_dir "F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140" \
+    --boost_lib_dir "F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140\lib64-msvc-14.0" \
+    --qt_path "F:/BASE_ENV/forOpenMVS/qt_msvc2015_64/msvc2015_64" \
+    --cgal_path "F:/BASE_ENV/forOpenMVS/CGAL-5.1/build" \
+    --cmake_generator "Visual Studio 14" \
+    --with_cuda \
+    --cuda_path "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.2" \
+
+```
+上述命令会失败，但是没关系，用code打开F:/prjs/colmap-3.6/build/colmap/__build__：
+全局替换的方式删除： BOOST_ALL_DYN_LINK=1，
+然后在F:/prjs/colmap-3.6/build/colmap/__build__里找到COLMAP.sln，然后手动用vs打开然后编译；
+推荐使用VS2015的工具对colmap进行编译.
+
+### 4 给出我编译后的库目录结构（最重要的是__install__/lib下面的内容）：
+其中： __install__/lib下面的platform中必须要有qwindows.dll，参考问题4。
+然后： __install__/lib里面的cgal*.dll也是不必须的，因为本博客使用的cgal是5.x，5.x的cgal都是header only 的库，所以该dll可以没有，但是其他的dll像是libgmp-10.dll确是必要的，否则将无法运行。
+```log
+sagar@DESKTOP-QM75KNS MINGW64 /f/prjs/colmap-3.6/build
+$ ls
+__download__  ceres-solver              colmap  freeimage  glew  suite-sparse
+__install__   CGAL-vc140-mt-4.14.3.dll  eigen   gflags     glog
+sagar@DESKTOP-QM75KNS MINGW64 /f/prjs/colmap-3.6/build
+$ ls __download__/
+ceres-solver-1.14.0.zip  freeimage-3.18.0.zip  glew-2.1.0.zip  suite-sparse.zip
+eigen-3.3.7.zip          gflags-2.2.2.zip      glog-0.3.5.zip
+sagar@DESKTOP-QM75KNS MINGW64 /f/prjs/colmap-3.6/build
+$ ls
+__download__  ceres-solver              colmap  freeimage  glew  suite-sparse
+__install__   CGAL-vc140-mt-4.14.3.dll  eigen   gflags     glog
+
+sagar@DESKTOP-QM75KNS MINGW64 /f/prjs/colmap-3.6/build
+$ cd __install__/lib
+
+sagar@DESKTOP-QM75KNS MINGW64 /f/prjs/colmap-3.6/build/__install__/lib
+$ tree
+.
+├── FreeImage.dll
+├── FreeImage.lib
+├── Qt5Core.dll
+├── Qt5Gui.dll
+├── Qt5Widgets.dll
+├── ceres.lib
+├── cmake
+│   ├── gflags
+│   │   ├── gflags-config-version.cmake
+│   │   ├── gflags-config.cmake
+│   │   ├── gflags-nonamespace-targets-release.cmake
+│   │   ├── gflags-nonamespace-targets.cmake
+│   │   ├── gflags-targets-release.cmake
+│   │   └── gflags-targets.cmake
+│   ├── glew
+│   │   ├── CopyImportedTargetProperties.cmake
+│   │   ├── glew-config.cmake
+│   │   ├── glew-targets-release.cmake
+│   │   └── glew-targets.cmake
+│   ├── glog
+│   │   ├── glog-config-version.cmake
+│   │   ├── glog-config.cmake
+│   │   ├── glog-targets-release.cmake
+│   │   └── glog-targets.cmake
+│   └── suitesparse-4.5.0
+│       ├── SuiteSparse-targets-release.cmake
+│       ├── SuiteSparse-targets.cmake
+│       ├── suitesparse-config-version.cmake
+│       └── suitesparse-config.cmake
+├── colmap
+│   ├── colmap.lib
+│   ├── colmap_cuda.lib
+│   ├── flann.lib
+│   ├── graclus.lib
+│   ├── lsd.lib
+│   ├── pba.lib
+│   ├── poisson_recon.lib
+│   ├── sift_gpu.lib
+│   ├── sqlite3.lib
+│   └── vlfeat.lib
+├── cudart64_102.dll
+├── gflags_nothreads_static.lib
+├── gflags_static.lib
+├── glew32.dll
+├── glew32.lib
+├── glog.lib
+├── libamd.lib
+├── libblas.dll
+├── libbtf.lib
+├── libcamd.lib
+├── libccolamd.lib
+├── libcholmod.lib
+├── libcolamd.lib
+├── libcxsparse.lib
+├── libgcc_s_sjlj-1.dll
+├── libgfortran-3.dll
+├── libglew32.lib
+├── libgmp-10.dll
+├── libklu.lib
+├── liblapack.dll
+├── libldl.lib
+├── libquadmath-0.dll
+├── libspqr.lib
+├── libumfpack.lib
+├── metis.lib
+├── pkgconfig
+│   └── glew.pc
+├── platforms
+│   └── qwindows.dll
+└── suitesparseconfig.lib
+
+8 directories, 62 files
+
+```
+
+### 5 可能遇到的问题：
+- Q 1 一切都能正常编译通过，但是出现“程序无法正常启动, 0xc000007b”
+- **解决方案：** 仔细核对我提供的目录，看看是否是dll少了，一般libgmp-10.dll少了就会报这个错误，可以参照问题4
+- Q 2 boost总是报link2005的重定义错误：
+- **解决方案：** 打开colmap.sln，你会发现： 项目->属性c++预处理(宏定义) 中多了BOOST_ALL_DYN_LINK=1，用如下方法全局删除即可：用code打开F:/prjs/colmap-3.6/build/colmap/__build__：
+全局替换的方式删除： BOOST_ALL_DYN_LINK=1，然后vs会让你重载项目配置，再次编译应该可以直接通过。造成的原因可能是boost总是默认enable了autolink，这导致你必须把你的boost库的版本和你的vs版本对上，而且可能默认是全部动态链接（即使你配置了静态链接以后），可能的解决方案是，在项目根目录下面的CMAKELIST.txt中添加: 
+- Q 3 libcpmt.lib(ppltasks.obj) : error LNK2001: 无法解析的外部符号 __CxxFrameHandler4报错：
+- **解决方案：** 是因为你的库用的是vs2019编译的，然后colmap又用vs2015编译，就会报这个错误。
+- Q 4 Qt platform plugin 'windows' not found
+- **解决方案：** 是因为你虽然安装了qt，但是没有复制相关的dll到./build/colmap/__install__/lib下（colmap的运行直接双击__install__/COLMAP.BAT即可），复制方案：(也就是build.py中的编译后处理部分做的事情)
+```py
+def build_post_process(args):
+    if PLATFORM_IS_WINDOWS:
+        lapack_paths = glob.glob(
+            os.path.join(args.install_path, "lib64/lapack_blas_windows/*.dll"))
+        if lapack_paths:
+            for lapack_path in lapack_paths:
+                copy_file_if_not_exists(
+                    lapack_path,
+                    os.path.join(
+                        args.install_path, "lib",
+                        os.path.basename(lapack_path)))
+
+        if args.qt_path:
+            copy_file_if_not_exists(
+                os.path.join(args.qt_path, "bin/Qt5Core.dll"),
+                os.path.join(args.install_path, "lib/Qt5Core.dll"))
+            copy_file_if_not_exists(
+                os.path.join(args.qt_path, "bin/Qt5Gui.dll"),
+                os.path.join(args.install_path, "lib/Qt5Gui.dll"))
+            copy_file_if_not_exists(
+                os.path.join(args.qt_path, "bin/Qt5Widgets.dll"),
+                os.path.join(args.install_path, "lib/Qt5Widgets.dll"))
+            mkdir_if_not_exists(
+                os.path.join(args.install_path, "lib/platforms"))
+            copy_file_if_not_exists(
+                os.path.join(args.qt_path, "plugins/platforms/qwindows.dll"),
+                os.path.join(args.install_path, "lib/platforms/qwindows.dll"))
+
+        if args.with_cuda and args.cuda_path:
+            cudart_lib_path = glob.glob(os.path.join(args.cuda_path,
+                                                     "bin/cudart64_*.dll"))[0]
+            copy_file_if_not_exists(
+                cudart_lib_path,
+                os.path.join(args.install_path, "lib",
+                             os.path.basename(cudart_lib_path)))
+
+        if args.cgal_path:
+            gmp_lib_path = os.path.join(
+                args.cgal_path, "auxiliary/gmp/lib/libgmp-10.dll")
+            if os.path.exists(gmp_lib_path):
+                copy_file_if_not_exists(
+                    gmp_lib_path,
+                    os.path.join(args.install_path, "lib/libgmp-10.dll"))
+            cgal_lib_path = glob.glob(os.path.join(
+                args.cgal_path, "bin/CGAL-vc*-mt-*.dll"))
+            copy_file_if_not_exists(
+                cgal_lib_path[0],
+                os.path.join(args.install_path, "lib",
+                    os.path.basename(cgal_lib_path[0])))
+```
+- Q 5 莫名其妙报了cuda的编译的错误：error : identifier "__floorf" is undefined in device code
+- **解决方案：** vs2019 16.9.3以及以上有这个问题，你需要卸载然后回退到16.8.5
+- Q 6 C2132 编译器错误：表达式的计算结果不是常数
+- **解决方案：** 可能是你的编译器对cpp的新特性支持的不够好？，修改 src/retrieval/utils.h 的 55行为：
+```
+  // static const size_t kMaxHammingDistance = static_cast<size_t>(1.5f * kSigma);
+  static const size_t kMaxHammingDistance = static_cast<size_t>(24);
+```
+
+## 2020/05/19
+### osg模型调整光照以及模型闪烁问题[z-lighting]
+### 0 模型闪烁原因推测
+- 1 关于模型闪烁的问题，很可能是由于坐标的值的有效位数超过了7位，目前的opengl的gpu渲染（老一点的显卡以及gl）都是以单精度来渲染点的位置的，所以如果坐标很大，很可能导致单精度无法精确表示有效位数超过7位的数据，然后发生截断。
+- 2 关于z-lighting的问题，尝试了网上大多数的方法：可以使用osg封装的polygonOffset来避免重叠面片交替出现的问题，当然最好的方案是找的模型本身重叠面片就少
+
+### 1 meshlab手动调模型
+filters->Normals,curve,orientations->transform...
+
+### 2 使用osg降低模型的点的坐标大小
+```cpp
+	osg::Vec3f center1 = TerrainM1->getBound().center();
+	float radius1 = TerrainM1->getBound().radius();
+	osg::Vec3f center2 = TerrainM2->getBound().center();
+	float radius2 = TerrainM2->getBound().radius();
+	TerrainM1->setMatrix(
+		osg::Matrix::translate(-center1.x(), -center1.y(), -center1.z()) *
+		osg::Matrix::rotate(osg::DegreesToRadians(180.0), 1, 0, 0) *
+		osg::Matrix::translate(center1.x(), center1.y(), center1.z()) *
+		osg::Matrix::translate(0, 0, radius2 * 0.80 + radius1)
+	);
+	
+	// to modify the model's points render value
+	mRoot->getChild(0)->asTransform()->asMatrixTransform()->setMatrix(
+		osg::Matrix::translate(-center1.x(), -center1.y(), -center1.z())
+	);
+	osgDB::writeNodeFile(*(mRoot->getChild(0)->asNode()), "sc.obj");
+```
+
+### 3 关于材质，光照，以及模型读写旋转平移的例子
+
+关于材料的颜色光照等可以参考[https://learnopengl-cn.readthedocs.io/zh/latest/02%20Lighting/03%20Materials/](https://learnopengl-cn.readthedocs.io/zh/latest/02%20Lighting/03%20Materials/)
+```cpp
+  // mRoot是一个osg::ref_ptr<osg::Group>
+	auto TerrainM1 = new osg::MatrixTransform;
+	auto terrain1 = new osg::PositionAttitudeTransform;
+
+	auto TerrainM2 = new osg::MatrixTransform;
+	auto terrain2 = new osg::PositionAttitudeTransform;
+	osgDB::Options  *a = new osgDB::Options(std::string("noRotation")); // 关掉模型优化绘制(OSG在加载obj模型的时候，会默认将模型绕x轴逆时针旋转90度,此处设置不旋转)
+
+	// setting material
+	osg::Material *material = new osg::Material;
+	material->setDiffuse(osg::Material::FRONT, osg::Vec4(0.75, 0.80, 0.75, 1.0));
+	material->setAmbient(osg::Material::FRONT, osg::Vec4(0.75, 0.80, 0.75, 1.0));
+	// material->setShininess(osg::Material::FRONT, 90.0);
+	
+	// turn off light effect
+	auto Model1 = osgDB::readNodeFile(part1Path, a);
+	auto pState1 = Model1->getOrCreateStateSet();
+	pState1->setMode(GL_LIGHTING, osg::StateAttribute::ON);
+	pState1->setAttribute(material);
+	// pState1->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE);
+    // pState1->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+    // set polygon offset
+	osg::ref_ptr<osg::PolygonOffset> polyOff = new osg::PolygonOffset();
+	float mFactor = 1.0, mUnits = 1.0;
+	polyOff->setFactor(mFactor);
+	polyOff->setUnits(mUnits);
+	pState1->setAttributeAndModes(new osg::PolygonOffset(-1.0f,-1.0f),osg::StateAttribute::ON);
+	material->setEmission(osg::Material::FRONT, osg::Vec4(0.75, 0.80, 0.75, 1.0));
+	// pState1->setAttributeAndModes(polyOff.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+
+	// auto pGeom1 = Model1->asGeode()->asGeometry();
+	// pGeom1->getOrCreateStateSet()->setMode(GL_NV_framebuffer_multisample_coverage, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
+	TerrainM1->addChild(Model1);
+	TerrainM1->setName(modelPrefix + "1");
+
+
+	auto Model2 = osgDB::readNodeFile(part2Path, a);
+	auto pState2 = Model2->getOrCreateStateSet();
+	pState2->setMode(GL_LIGHTING, osg::StateAttribute::ON);
+	pState2->setAttribute(material);
+	
+	pState2->setMode(GL_BLEND, osg::StateAttribute::ON);
+	TerrainM2->addChild(Model2);
+	TerrainM2->setName(modelPrefix + "2");
+
+	
+
+	// rotate to make sure the building is standing on the ground
+	osg::Vec3f center1 = TerrainM1->getBound().center();
+	float radius1 = TerrainM1->getBound().radius();
+	osg::Vec3f center2 = TerrainM2->getBound().center();
+	float radius2 = TerrainM2->getBound().radius();
+	TerrainM1->setMatrix(
+		osg::Matrix::translate(-center1.x(), -center1.y(), -center1.z()) *
+		osg::Matrix::rotate(osg::DegreesToRadians(180.0), 1, 0, 0) *
+		osg::Matrix::translate(center1.x(), center1.y(), center1.z()) *
+		osg::Matrix::translate(0, 0, radius2 * 0.80 + radius1)
+	);
+	mRoot->addChild(TerrainM1);
+	TerrainM2->setMatrix(
+		osg::Matrix::translate(-center2.x(), -center2.y(), -center2.z()) *
+		osg::Matrix::rotate(osg::DegreesToRadians(180.0), 1, 0, 0) *
+		osg::Matrix::translate(center2.x(), center2.y(), center2.z()) *
+		osg::Matrix::translate(0, 0, 0.5 * radius2)
+	);
+	mRoot->addChild(TerrainM2);
+
+	// to modify the model's points render value
+	mRoot->getChild(0)->asTransform()->asMatrixTransform()->setMatrix(
+		osg::Matrix::translate(-center1.x(), -center1.y(), -center1.z())
+	);
+	mRoot->getChild(1)->asTransform()->asMatrixTransform()->setMatrix(
+		osg::Matrix::translate(-center1.x(), -center1.y(), -center1.z())
+	);
+	mRoot->getChild(4)->asTransform()->asMatrixTransform()->setMatrix(
+		osg::Matrix::translate(-center1.x(), -center1.y(), -center1.z())
+	);
+	mRoot->getChild(5)->asTransform()->asMatrixTransform()->setMatrix(
+		osg::Matrix::translate(-center1.x(), -center1.y(), -center1.z())
+	);
+
+
+	osgDB::writeNodeFile(*(mRoot->getChild(0)->asNode()), "sc.obj");
+	osgDB::writeNodeFile(*(mRoot->getChild(1)->asNode()), "de.obj");
+	osgDB::writeNodeFile(*(mRoot->getChild(4)->asNode()), "par1.obj");
+	osgDB::writeNodeFile(*(mRoot->getChild(5)->asNode()), "par2.obj");
+
+```
+
+## 2020/05/19
+
+### 1 编译orb_slam
+```sh
+git clone https://github.com/UZ-SLAMLab/ORB_SLAM3.git ORB_SLAM3
+```
+建议编译前，先看一下该项目上的一个pull request:(使用原来项目问题过多, 遇到的每一个问题在第4节都会详细描述，于是使用如下的一个PR)
+[https://github.com/UZ-SLAMLab/ORB_SLAM3/pull/53](https://github.com/UZ-SLAMLab/ORB_SLAM3/pull/53)
+推荐使用vs2015生成器;
+
+### 2 编译
+#### 2.1 DBoW2 编译(如果使用pr，本步骤可以不看，2.3的orbslam3也对所有cmakelist.txt的修改做了说明)
+主要是需要添加oepncv和boost的依赖
+```diff
+PS F:\prjs\ORB_SLAM3> git diff
+diff --git a/Thirdparty/DBoW2/CMakeLists.txt b/Thirdparty/DBoW2/CMakeLists.txt
+index c561724..2368c23 100644
+--- a/Thirdparty/DBoW2/CMakeLists.txt
++++ b/Thirdparty/DBoW2/CMakeLists.txt
+@@ -32,9 +32,22 @@ if(NOT OpenCV_FOUND)
+    endif()
+ endif()
+
++
++set(Boost_USE_STATIC_LIBS ON)
++add_definitions("-DBOOST_ALL_NO_LIB=1")
++find_package(Boost REQUIRED COMPONENTS
++             serialization)
++
+ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
+-include_directories(${OpenCV_INCLUDE_DIRS})
++include_directories(${OpenCV_INCLUDE_DIRS} ${BOOST_INCLUDEDIR})
++link_directories(${Boost_LIBRARY_DIRS})
++
++message("lib is: " ${Boost_SERIALIZATION_LIBRARY})
++
+ add_library(DBoW2 SHARED ${SRCS_DBOW2} ${SRCS_DUTILS})
+-target_link_libraries(DBoW2 ${OpenCV_LIBS})
++target_link_libraries(DBoW2 
++    ${OpenCV_LIBS}    
++    ${Boost_SERIALIZATION_LIBRARY}
++)
+
+diff --git a/Thirdparty/DBoW2/DBoW2/FORB.cpp b/Thirdparty/DBoW2/DBoW2/FORB.cpp
+index 1f1990c..80bf473 100644
+--- a/Thirdparty/DBoW2/DBoW2/FORB.cpp
++++ b/Thirdparty/DBoW2/DBoW2/FORB.cpp
+@@ -13,7 +13,7 @@
+ #include <vector>
+ #include <string>
+ #include <sstream>
+-#include <stdint-gcc.h>
++#include <stdint.h>
+
+ #include "FORB.h"
+```
+如果指定了vs2019，然后又用vs2015编译的库，就需要用如下的最后一个参数去掉boost的autolink;
+```sh
+mkdir build && cd build
+cmake .. \
+-G "Visual Studio 16" \
+-DCMAKE_BUILDY_TYPE=Release \
+-DOpenCV_DIR="F:/BASE_ENV/forOpenMVS/opencv/build" \
+-DBOOST_ROOT="F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140" \
+-DBOOST_INCLUDEDIR="F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140" \
+-DBOOST_LIBRARYDIR="F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140" \
+-DBOOST_ALL_NO_LIB=1 \     # 避免boost的autolink，autolink会要求vs版本和boost版本一致
+```
+
+### 2.2 g2o
+项目->属性->c++->预处器宏定义->添加： WINDOWS，否则会出现vasprintf找不到定义。
+```sh
+cd ../../g2o
+
+echo "Configuring and building Thirdparty/g2o ..."
+
+mkdir build
+cd build
+cmake .. \
+-G "Visual Studio 14" \
+-DCMAKE_BUILDY_TYPE=Release \
+-DEIGEN3_INCLUDE_DIR="F:\BASE_ENV\forOpenMVS\eigen" \
+-DBOOST_ALL_NO_LIB=1 \
+```
+
+### 2.3 orbslam3
+#### 2.3.0 首先按照下面的diff修改所有的internal::axpy和internal::atxpy
+```
+
+```
+如果你是自己在orbslam3直接编译的话，请参考: [https://github.com/RainerKuemmerle/g2o/issues/91](https://github.com/RainerKuemmerle/g2o/issues/91)
+#### 2.3.1 找不到unistd.h
+首先：unistd.h需要修改调，主要是为了使用usleep，该函数使用如下代码替换：
+```cpp
+```cpp
+#include <windows.h>
+
+void usleep(__int64 usec) 
+{ 
+    HANDLE timer; 
+    LARGE_INTEGER ft; 
+
+    ft.QuadPart = -(10*usec); // Convert to 100 nanosecond interval, negative value indicates relative time
+
+    timer = CreateWaitableTimer(NULL, TRUE, NULL); 
+    SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0); 
+    WaitForSingleObject(timer, INFINITE); 
+    CloseHandle(timer); 
+}
+
+```
+或者如下一行能搞定：**推荐这个方法**
+```cpp
+            if (ttrack < T) {
+                long usec = static_cast<long>((T - ttrack) * 1e6);
+                std::this_thread::sleep_for(std::chrono::microseconds(usec));
+            }
+```
+
+
+#### 2.3.2 使用cmake-gui开始编译
+cmake-gui配置：
+opencv，boost，需要修改cmakelist.txt:
+添加如下定义：
+```cmake
+-DBOOST_ALL_NO_LIB=1
+```
+
+**如下是我对cmakeList.txt做出的修改。**
+
+```diff
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 70d03fe..79b32e7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,6 +34,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+   #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+ endif()
+ 
++add_definitions("-DBOOST_ALL_NO_LIB=1")
+ 
+ LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+ 
+@@ -46,13 +47,15 @@ if(NOT OpenCV_FOUND)
+ endif()
+ MESSAGE(STATUS "OpenCV VERSION: ${OpenCV_VERSION}")
+ 
+-find_package(Eigen3 3.1.0 REQUIRED)
++# find_package(Eigen3 REQUIRED)
++set(EIGEN3_INCLUDE_DIR "F:/BASE_ENV/forOpenMVS/eigen")
++MESSAGE("eigen & boost inlcude dir is: @@@@@@" ${EIGEN3_INCLUDE_DIRS}) 
+ 
+ find_package(Pangolin REQUIRED)
+ find_package(realsense2)
+ 
+ find_package(Boost REQUIRED COMPONENTS serialization)
+-MESSAGE(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")
++MESSAGE(STATUS "cxy@@@@@@@@@@ Boost_INCLUDE_DIRS & Boost_LIBRARIES: ${Boost_INCLUDE_DIRS} ${Boost_LIBRARIES}")
+ 
+ set(OPENSSL_USE_STATIC_LIBS TRUE)
+ find_package(OpenSSL REQUIRED) # for crypto library
+@@ -65,6 +68,7 @@ include_directories(
+   ${EIGEN3_INCLUDE_DIR}
+   ${Pangolin_INCLUDE_DIRS}
+   ${OPENSSL_INCLUDE_DIR}
++  ${Boost_INCLUDE_DIRS}
+ )
+ 
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+diff --git a/Thirdparty/DBoW2/CMakeLists.txt b/Thirdparty/DBoW2/CMakeLists.txt
+index bf987be..e527175 100644
+--- a/Thirdparty/DBoW2/CMakeLists.txt
++++ b/Thirdparty/DBoW2/CMakeLists.txt
+@@ -51,10 +51,16 @@ if(NOT OpenCV_FOUND)
+   endif()
+ endif()
+ MESSAGE(STATUS "OpenCV VERSION: ${OpenCV_VERSION}")
+-include_directories(${OpenCV_INCLUDE_DIRS})
+-target_link_libraries(DBoW2 ${OpenCV_LIBS})
+ 
+ # add Boost
+-find_package(Boost REQUIRED COMPONENTS serialization)
+-message(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")
+-target_link_libraries(DBoW2 ${Boost_LIBRARIES})
++set(Boost_USE_STATIC_LIBS ON)
++add_definitions("-DBOOST_ALL_NO_LIB=1")
++find_package(Boost REQUIRED COMPONENTS 
++                  serialization)
++message(STATUS "cxy@@@@@@@@ Boost_INCLUDE_DIRS & libs: ${Boost_INCLUDE_DIRS} >>>> ${Boost_LIBRARIES}")
++
++include_directories(${OpenCV_INCLUDE_DIRS} ${BOOST_INCLUDEDIR})
++target_link_libraries(DBoW2 
++  ${OpenCV_LIBS} 
++  ${Boost_LIBRARIES}
++)
+diff --git a/Thirdparty/g2o/g2o/core/sparse_block_matrix.hpp b/Thirdparty/g2o/g2o/core/sparse_block_matrix.hpp
+index 8dfa99c..80e4fa8 100644
+--- a/Thirdparty/g2o/g2o/core/sparse_block_matrix.hpp
++++ b/Thirdparty/g2o/g2o/core/sparse_block_matrix.hpp
+@@ -24,6 +24,13 @@
+ // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
++// add these marcos to fix:  
++// 1>f:\prjs\orb_slam3\thirdparty\g2o\g2o\core\sparse_block_matrix.hpp(277): fatal error C1001: 编译器中发生内部错误。
++
++#define _AXPY(MatrixType,A,x,xoff,y,yoff)y.segment<MatrixType::RowsAtCompileTime>(yoff) += (A) * (x).segment<MatrixType::ColsAtCompileTime>(xoff)
++#define _ATXPY(MatrixType,A,x,xoff,y,yoff)y.segment<MatrixType::ColsAtCompileTime>(yoff) += (A).transpose() * (x).segment<MatrixType::RowsAtCompileTime>(xoff)
++
++
+ namespace g2o {
+   using namespace Eigen;
+ 
+@@ -249,7 +256,8 @@ namespace g2o {
+         const typename SparseBlockMatrix<MatrixType>::SparseMatrixBlock* a=it->second;
+         int destOffset = it->first ? _rowBlockIndices[it->first - 1] : 0;
+         // destVec += *a * srcVec (according to the sub-vector parts)
+-        internal::axpy(*a, srcVec, srcOffset, destVec, destOffset);
++        // internal::axpy(*a, srcVec, srcOffset, destVec, destOffset);
++        _AXPY(MatrixType, *a, srcVec, srcOffset, destVec, destOffset);
+       }
+     }
+   }
+@@ -274,9 +282,12 @@ namespace g2o {
+         if (destOffset > srcOffset) // only upper triangle
+           break;
+         // destVec += *a * srcVec (according to the sub-vector parts)
+-        internal::axpy(*a, srcVec, srcOffset, destVec, destOffset);
+-        if (destOffset < srcOffset)
+-          internal::atxpy(*a, srcVec, destOffset, destVec, srcOffset);
++        // internal::axpy(*a, srcVec, srcOffset, destVec, destOffset);
++        _AXPY(MatrixType, *a, srcVec, srcOffset, destVec, destOffset);
++        if (destOffset < srcOffset) {
++          // internal::atxpy(*a, srcVec, destOffset, destVec, srcOffset);
++          _ATXPY(MatrixType, *a, srcVec, destOffset, destVec, srcOffset);
++        }
+       }
+     }
+   }
+@@ -305,7 +316,8 @@ namespace g2o {
+         const typename SparseBlockMatrix<MatrixType>::SparseMatrixBlock* a=it->second;
+         int srcOffset = rowBaseOfBlock(it->first);
+         // destVec += *a.transpose() * srcVec (according to the sub-vector parts)
+-        internal::atxpy(*a, srcVec, srcOffset, destVec, destOffset);
++        // internal::atxpy(*a, srcVec, srcOffset, destVec, destOffset);
++	    _ATXPY(MatrixType, *a, srcVec, srcOffset, destVec, destOffset);
+       }
+     }
+     
+diff --git a/Thirdparty/g2o/g2o/core/sparse_block_matrix_ccs.h b/Thirdparty/g2o/g2o/core/sparse_block_matrix_ccs.h
+index 36ddfe6..91832cd 100644
+--- a/Thirdparty/g2o/g2o/core/sparse_block_matrix_ccs.h
++++ b/Thirdparty/g2o/g2o/core/sparse_block_matrix_ccs.h
+@@ -24,6 +24,9 @@
+ // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
++#define _AXPY(MatrixType,A,x,xoff,y,yoff)y.segment<MatrixType::RowsAtCompileTime>(yoff) += (A) * (x).segment<MatrixType::ColsAtCompileTime>(xoff)
++#define _ATXPY(MatrixType,A,x,xoff,y,yoff)y.segment<MatrixType::ColsAtCompileTime>(yoff) += (A).transpose() * (x).segment<MatrixType::RowsAtCompileTime>(xoff)
++
+ #ifndef G2O_SPARSE_BLOCK_MATRIX_CCS_H
+ #define G2O_SPARSE_BLOCK_MATRIX_CCS_H
+ 
+@@ -122,7 +125,8 @@ namespace g2o {
+             const SparseMatrixBlock* a = it->block;
+             int srcOffset = rowBaseOfBlock(it->row);
+             // destVec += *a.transpose() * srcVec (according to the sub-vector parts)
+-            internal::atxpy(*a, srcVec, srcOffset, destVec, destOffset);
++            // internal::atxpy(*a, srcVec, srcOffset, destVec, destOffset);
++            _ATXPY(MatrixType, *a, srcVec, srcOffset, destVec, destOffset);
+           }
+         }
+       }
+diff --git a/Thirdparty/g2o/g2o/core/sparse_block_matrix_diagonal.h b/Thirdparty/g2o/g2o/core/sparse_block_matrix_diagonal.h
+index 7b13b9f..8605a5f 100644
+--- a/Thirdparty/g2o/g2o/core/sparse_block_matrix_diagonal.h
++++ b/Thirdparty/g2o/g2o/core/sparse_block_matrix_diagonal.h
+@@ -24,6 +24,9 @@
+ // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
++#define _AXPY(MatrixType,A,x,xoff,y,yoff)y.segment<MatrixType::RowsAtCompileTime>(yoff) += (A) * (x).segment<MatrixType::ColsAtCompileTime>(xoff)
++#define _ATXPY(MatrixType,A,x,xoff,y,yoff)y.segment<MatrixType::ColsAtCompileTime>(yoff) += (A).transpose() * (x).segment<MatrixType::RowsAtCompileTime>(xoff)
++
+ #ifndef G2O_SPARSE_BLOCK_MATRIX_DIAGONAL_H
+ #define G2O_SPARSE_BLOCK_MATRIX_DIAGONAL_H
+ 
+@@ -94,7 +97,8 @@ namespace g2o {
+           int srcOffset = destOffset;
+           const SparseMatrixBlock& A = _diagonal[i];
+           // destVec += *A.transpose() * srcVec (according to the sub-vector parts)
+-          internal::axpy(A, srcVec, srcOffset, destVec, destOffset);
++          // internal::axpy(A, srcVec, srcOffset, destVec, destOffset);
++          _AXPY(MatrixType, A, srcVec, srcOffset, destVec, destOffset);
+         }
+       }
+ 
+
+```
+
+### 3 编译成功显示：
+```log
+1>F:\prjs\ORB_SLAM3\Thirdparty\Pangolin\include\pangolin/gl/gldraw.h(109,1): warning C4267: “参数”: 从“size_t”转换到“GLint”，可能丢失数据
+1>  正在创建库 F:/prjs/ORB_SLAM3_Fix/ORB_SLAM3/lib/mono_kitti.lib 和对象 F:/prjs/ORB_SLAM3_Fix/ORB_SLAM3/lib/mono_kitti.exp
+1>mono_kitti.vcxproj -> F:\prjs\ORB_SLAM3_Fix\ORB_SLAM3\bin\mono_kitti.exe
+1>已完成生成项目“mono_kitti.vcxproj”的操作。
+========== 生成: 成功 1 个，失败 0 个，最新 4 个，跳过 0 个 ==========
+```
+  如下是一个调用gif：
+  - 1 下载数据：[http://robotics.ethz.ch/~asl-datasets/ijrr_euroc_mav_dataset/machine_hall/MH_01_easy/MH_01_easy.zip](http://robotics.ethz.ch/~asl-datasets/ijrr_euroc_mav_dataset/machine_hall/MH_01_easy/MH_01_easy.zip)
+- 2 进入：ORB_SLAM3/Examples，执行脚本euroc_eval_examles.sh中的一行，将其中的一行（比如第7行）改成你需要的格式，然后拿出来执行：
+```sh
+./Monocular/mono_euroc ../Vocabulary/ORBvoc.txt ./Monocular/EuRoC.yaml ./EuRoc_Data/MH_01_easy/ ./Monocular/EuRoC_TimeStamps/MH01.txt result/Resdataset-MH01_mono
+```
+执行结果： 
+![https://cdn.jsdelivr.net/gh/xychen5/blogImgs@main/imgs/orbslam3.5qu5qjc1jvw0.gif](https://cdn.jsdelivr.net/gh/xychen5/blogImgs@main/imgs/orbslam3.5qu5qjc1jvw0.gif)
+
+
+### 4 可能遇到的问题
+#### 4.1 g2o -> vasprint 找不到标识符
+到它的声明处，就会发现，它的声明和定义均位于非活动预处理器块中，被宏定义WINDOWS关闭了。所以添加对应的宏定义即可：右键项目->属性->C++->预处理器->预处理器定义，为其添加一个变量，WINDOWS，保存设定之后，这个错误也就消失了。
+以上过程也可以在cmakelist.txt中添加： ADD_DEFINITIONS(-DWINDOWS)
+
+#### 4.2 orb-slam3 -> cl.exe has no C++11 support.  Please use a different C++ compiler.
+因为cmakelist对于cl的c++11的支持方式需要如下编写：
+```cmake
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,19 +17,20 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
+ 
+ # Check C++11 or C++0x support
+ include(CheckCXXCompilerFlag)
+-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+-CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+-if(COMPILER_SUPPORTS_CXX11)
+-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+-   add_definitions(-DCOMPILEDWITHC11)
+-   message(STATUS "Using flag -std=c++11.")
+-elseif(COMPILER_SUPPORTS_CXX0X)
+-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+-   add_definitions(-DCOMPILEDWITHC0X)
+-   message(STATUS "Using flag -std=c++0x.")
+-else()
+-   message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+-endif()
++set (CMAKE_CXX_STANDARD 11)
++# CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
++# CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
++# if(COMPILER_SUPPORTS_CXX11)
++#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
++#    add_definitions(-DCOMPILEDWITHC11)
++#    message(STATUS "Using flag -std=c++11.")
++# elseif(COMPILER_SUPPORTS_CXX0X)
++#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
++#    add_definitions(-DCOMPILEDWITHC0X)
++#    message(STATUS "Using flag -std=c++0x.")
++# else()
++#    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
++# endif()
+```
+
+#### 4.3 stdio-gcc.h找不到
+将其改为stdio.h即可
+
+#### 4.4 Failed to run MSBuild command:      C:/Program Files (x86)/MSBuild/14.0/bin/MSBuild.exe  
+将上述的MSBuild.exe添加到里面，然后[https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/](https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/)
+里面找到win8.1的sdk，安装即可。
+
+#### 4.5 fata_error: compiler internal error on msc1.cpp:1xxx编译器内部错误
+和g2o/core/matrix_operation.h的代码有关系，参考如下修改：
+[https://github.com/RainerKuemmerle/g2o/issues/91](https://github.com/RainerKuemmerle/g2o/issues/91)
+[https://github.com/UZ-SLAMLab/ORB_SLAM3/pull/53](https://github.com/UZ-SLAMLab/ORB_SLAM3/pull/53)
+
+#### 4.6 std::max找不到定义
+添加： 
+```
+#include <algorithm>
+```
+
+
+#### 4.7 找不到openssl/md5.h
+可以尝试安装strawberry-perl，里面有oepnssl的库，然后下载openssl的源码获得其include。
+这里也有openssl编译好的链接库： [https://indy.fulgan.com/SSL/LinkLibs/](https://indy.fulgan.com/SSL/LinkLibs/)
+我的下载地址为：[https://indy.fulgan.com/SSL/LinkLibs/openssl-1.0.2g-x64_86-win64_LinkLibs.zip](https://indy.fulgan.com/SSL/LinkLibs/openssl-1.0.2g-x64_86-win64_LinkLibs.zip)
+
+配置完成后比如一些openssl的依赖就需要手动添加了：
+F:\BASE_ENV\openSSL\openssl\include
+F:\BASE_ENV\openSSL\openssl\lib\ssleay32.lib
+F:\BASE_ENV\openSSL\openssl\lib\libeay32.lib
+
+#### 4.8 link2005 error 将所有项目->属性->c++->代码生成->MD改成MT
+```log
+1>msvcprt.lib(MSVCP140.dll) : error LNK2005: "public: class std::basic_istream<char,struct std::char_traits<char> > & __cdecl std::basic_istream<char,struct std::char_traits<char> >::operator>>(double &)" (??5?$basic_istream@DU?$char_traits@D@std@@@std@@QEAAAEAV01@AEAN@Z) 已经在 pangolin.lib(widgets.obj) 中定义
+1>msvcprt.lib(MSVCP140.dll) : error LNK2005: "public: virtual __cdecl std::basic_iostream<char,struct std::char_traits<char> >::~basic_iostream<char,struct std::char_traits<char> >(void)" (??1?$basic_iostream@DU?$char_traits@D@std@@@std@@UEAA@XZ) 已经在 ORB_SLAM3.lib(System.obj) 中定义
+1>libcpmt.lib(locale0.obj) : error LNK2038: 检测到“RuntimeLibrary”的不匹配项: 值“MT_StaticRelease”不匹配值“MD_DynamicRelease”(stereo_euroc.obj 中)
+1>libcpmt.lib(locale0.obj) : error LNK2005: "void __cdecl std::_Facet_Register(class std::_Facet_base *)" (?_Facet_Register@std@@YAXPEAV_Facet_base@1@@Z) 已经在 msv
+
+```
+
+#### 4.9 QT5找不到FindQT5.cmake
+```cmake
+# step1: 设置qt的安装位置
+set(CMAKE_PREFIX_PATH "/opt/Qt/5.12.3/gcc_64") # windows下应该是msvc2015 或者之后的
+
+# step2: 设置你需要的qt的库的dir
+set(Qt5_DIR "${CMAKE_PREFIX_PATH}/lib/cmake/Qt5")
+set(Qt5Widgets_DIR "${CMAKE_PREFIX_PATH}/lib/cmake/Qt5Widgets")
+set(Qt5Network_DIR "${CMAKE_PREFIX_PATH}/lib/cmake/Qt5Network")
+set(Qt5LinguistTools_DIR "${CMAKE_PREFIX_PATH}/lib/cmake/Qt5LinguistTools")
+
+find_package(Qt5 COMPONENTS Widgets Network LinguistTools)
+```
+
+## 2021/06/01 - 
+
+### 0 安装ROS
+参考[https://blog.csdn.net/weixin_43563233/article/details/112238082](https://blog.csdn.net/weixin_43563233/article/details/112238082)
+```
+
+C:\Windows\System32\cmd.exe /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64&& set ChocolateyInstall=c:\opt\chocolatey&& c:\opt\ros\melodic\x64\setup.bat
+
+————————————————
+版权声明：本文为CSDN博主「Myliuxuwei」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/weixin_43563233/article/details/112238082
+```
+
+qt/ material
+
+
+### 1 制作数据集跑orbslam3
+
+#### 1.1 标定相机
+- 1 首先打印标定板：
+去[https://github.com/opencv/opencv/blob/master/doc/pattern.png](https://github.com/opencv/opencv/blob/master/doc/pattern.png)下载
+- 2 计算打印出来的标定板的真实长度
+  - 2.1 首先用一图片查看软件打开，看看真个图片的宽所占的像素，是： 3410
+  - 2.2 然后看看图片中横向的7个格子的宽度所占的像素，是：2841
+  - 2.3 整张A4的宽度为2100.2mm
+  - 2.4 所以你的格子宽度为： 249.965mm
+- 3 拍一组标定照片，注意标定的照片的长宽不要旋转
+- 4 用如下shell完成标定
+```sh
+# 生成图片
+python .\scripts\sep.py .\cali1080p.mp4 .\caliPics\cali1080p\
+# 标定
+python .\scripts\cali.py .\caliPics\cali31080p\ png
+```
+
+标定结果：
+
+- 0 cali
+```
+# python代码:
+ret: 1.1223834441333873
+internal matrix:
+ [[1.95046109e+03 0.00000000e+00 9.81757313e+02]
+ [0.00000000e+00 1.93409142e+03 5.35441541e+02]
+ [0.00000000e+00 0.00000000e+00 1.00000000e+00]]
+distortion cofficients:
+ [[ 4.17901304e-01 -4.92447547e+00 -1.55811973e-04  7.83587527e-03
+   1.82138290e+01]]
+
+avg error: 0.1469
+
+# matlab
+
+
+
+```
+
+#### 1.2 制作需要的数据集
+将视频解帧然后形成csv列表，然后运行如下命令：
+```
+
+python .\scripts\sep.py ./workRoom2.mp4 ./viPics/workRoom2
+python .\scripts\genIdx.py ./viPics/workRoom2 workRoom2.txt
+
+./Monocular/mono_euroc ../Vocabulary/ORBvoc.txt ./data/myPhone1080p.yaml ./data/viPics/workRoom2 ./data/workRoom2.txt  ./data/resWorkRoom2
+```
+
+制作视频的一些技巧：
+- 1 初始化先在原地待久一点
+- 2 拐弯慢点
+- 3 确保前后两帧能够有相同的特征点
+
+#### 1.3 某些名词解释
+IMU: inertial measurement unit，惯性测量单元
+
+
+
+
+
+## draft
+./Monocular/mono_euroc ../Vocabulary/ORBvoc.txt ./data/myPhone240p.yaml ./data/viPics/work3 ./data/work3.txt  ./data/resWork3
+
+```
+cd data
+mkdir -p viPics/work4/mav0/cam0/data
+python .\scripts\sep.py ./work4240p.mp4 ./viPics/work4/mav0/cam0/data
+python .\scripts\genIdx.py ./viPics/work4 work4.txt
+touch resWork4
+cd ..
+./Monocular/mono_euroc ../Vocabulary/ORBvoc.txt ./data/myPhone240p.yaml ./data/viPics/work4 ./data/work4.txt  ./data/resWork4
+```
+
+
+```
+cd data
+mkdir -p viPics/work5/mav0/cam0/data
+python .\scripts\sep.py ./work5240p.mp4 ./viPics/work5/mav0/cam0/data
+python .\scripts\genIdx.py ./viPics/work5/mav0/cam0/data work5.txt
+touch resWork5
+cd ..
+./Monocular/mono_euroc ../Vocabulary/ORBvoc.txt ./data/myPhone240p.yaml ./data/viPics/work5 ./data/work5.txt  ./data/resWork5
+```
+
+
+```
+cd data
+mkdir -p viPics/work6/mav0/cam0/data
+python .\scripts\sep.py ./work6240p.mp4 ./viPics/work6/mav0/cam0/data
+python .\scripts\genIdx.py ./viPics/work6/mav0/cam0/data work6.txt
+touch resWork6
+cd ..
+./Monocular/mono_euroc ../Vocabulary/ORBvoc.txt ./data/myPhone240p.yaml ./data/viPics/work6 ./data/work6.txt  ./data/resWork6
+```
+
+
+
+## 2020/06/06
+
+### 1 osgQT的移植
+首先参考官方项目：
+[https://github.com/openscenegraph/osgQt](https://github.com/openscenegraph/osgQt)
+
+这里先给出结果图：
+![https://cdn.jsdelivr.net/gh/xychen5/blogImgs@main/imgs/gliderQT.1w4nlzuxphsw.png](https://cdn.jsdelivr.net/gh/xychen5/blogImgs@main/imgs/gliderQT.1w4nlzuxphsw.png)
+
+#### 1.1 修改osgviewerqt.cpp如下： 这样你就能自己读模型了
+```cpp
+
+#include <osgQOpenGL/osgQOpenGLWidget>
+
+#include <osgDB/ReadFile>
+#include <osgUtil/Optimizer>
+#include <osg/CoordinateSystemNode>
+
+#include <osg/Switch>
+#include <osg/Types>
+#include <osgViewer/Viewer>
+#include <osgText/Text>
+
+#include <osgViewer/Viewer>
+#include <osgViewer/ViewerEventHandlers>
+
+#include <osgGA/TrackballManipulator>
+#include <osgGA/FlightManipulator>
+#include <osgGA/DriveManipulator>
+#include <osgGA/KeySwitchMatrixManipulator>
+#include <osgGA/StateSetManipulator>
+#include <osgGA/AnimationPathManipulator>
+#include <osgGA/TerrainManipulator>
+#include <osgGA/SphericalManipulator>
+
+#include <osgGA/Device>
+
+#include <QApplication>
+#include <QSurfaceFormat>
+
+#include <iostream>
+
+
+int main( int argc, char** argv )
+{
+
+
+    QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+
+#ifdef OSG_GL3_AVAILABLE
+    format.setVersion(3, 2);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setOption(QSurfaceFormat::DebugContext);
+#else
+    format.setVersion(2, 0);
+    format.setProfile(QSurfaceFormat::CompatibilityProfile);
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setOption(QSurfaceFormat::DebugContext);
+#endif
+    format.setDepthBufferSize(24);
+    //format.setAlphaBufferSize(8);
+    format.setSamples(8);
+    format.setStencilBufferSize(8);
+    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+    QSurfaceFormat::setDefaultFormat(format);
+
+    QApplication app(argc, argv);
+
+    // use an ArgumentParser object to manage the program arguments.
+    osg::ArgumentParser arguments(&argc, argv);
+
+    arguments.getApplicationUsage()->setApplicationName(
+        arguments.getApplicationName());
+    arguments.getApplicationUsage()->setDescription(arguments.getApplicationName() +
+                                                    " is the standard OpenSceneGraph example which loads and visualises 3d models.");
+    arguments.getApplicationUsage()->setCommandLineUsage(
+        arguments.getApplicationName() + " [options] filename ...");
+    arguments.getApplicationUsage()->addCommandLineOption("--image <filename>",
+                                                          "Load an image and render it on a quad");
+    arguments.getApplicationUsage()->addCommandLineOption("--dem <filename>",
+                                                          "Load an image/DEM and render it on a HeightField");
+    arguments.getApplicationUsage()->addCommandLineOption("--login <url> <username> <password>",
+                                                          "Provide authentication information for http file access.");
+    arguments.getApplicationUsage()->addCommandLineOption("-p <filename>",
+                                                          "Play specified camera path animation file, previously saved with 'z' key.", 
+                                                          "F:/dataSets/OpenSceneGraph-Data-3.4.0/OpenSceneGraph-Data/glider.osg");
+    arguments.getApplicationUsage()->addCommandLineOption("--speed <factor>",
+                                                          "Speed factor for animation playing (1 == normal speed).");
+    arguments.getApplicationUsage()->addCommandLineOption("--device <device-name>",
+                                                          "add named device to the viewer");
+
+    osgQOpenGLWidget widget(&arguments);
+
+    if (true) {
+
+        osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("F:/dataSets/OpenSceneGraph-Data-3.4.0/OpenSceneGraph-Data/glider.osg");
+
+        if (!loadedModel)
+        {
+            std::cout << arguments.getApplicationName() << ": No data loaded" << std::endl;
+            return 1;
+        }
+
+        // any option left unread are converted into errors to write out later.
+        arguments.reportRemainingOptionsAsUnrecognized();
+
+        // report any errors if they have occurred when parsing the program arguments.
+        if (arguments.errors())
+        {
+            arguments.writeErrorMessages(std::cout);
+            return 1;
+        }
+
+        widget.show();
+
+        // optimize the scene graph, remove redundant nodes and state etc.
+        osgUtil::Optimizer optimizer;
+        optimizer.optimize(loadedModel);
+
+        // mViewer = new osgViewer::Viewer();
+        osg::ref_ptr<osgViewer::Viewer> mViewer = widget.getOsgViewer();
+       
+    		osg::ref_ptr<osg::Camera> camera = mViewer->getCamera();
+
+        camera->setClearMask(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        camera->setClearColor(osg::Vec4f(0.2f, 0.2f, 0.4f, 1.0f));
+
+        // Add the Camera to the Viewer
+        mViewer->setCamera(camera.get());
+
+        // Add the Camera Manipulator to the Viewer
+        // mViewer->setCameraManipulator(keyswitchManipulator.get());
+        osg::ref_ptr<osgGA::TrackballManipulator> trackball = new osgGA::TrackballManipulator();
+        mViewer->setCameraManipulator(trackball.get());
+
+        mViewer->setSceneData(loadedModel);
+
+        // // Realize the Viewer's graphics context, which already done in the default pWidget
+        // mViewer->realize(); 
+
+        return app.exec();
+    }
+}
+```
+
+#### 1.2 qt中使用
+- 1 封装一个自己的类：
+```cpp
+#include <iostream>
+#include <memory>
+
+#include "osgHeaders.h"
+
+/*
+ * this class is mainly for initialize the pWidget
+*/
+class QOsgWidget {
+public:
+    // essential widget, use this ptr to be the real widget
+    osgQOpenGLWidget* pWidget = nullptr;
+    // QOsgWidget(QWidget* parent = nullptr);
+    QOsgWidget(const std::string& modelPath, QWidget* parent = nullptr);
+    ~QOsgWidget();
+
+    // osg base vars
+    osg::ref_ptr<osg::Group>                        mRoot                = nullptr;
+    osg::ref_ptr<osg::Camera>                       camera               = nullptr;
+    osg::ref_ptr<osgViewer::Viewer>                 mViewer              = nullptr;
+    osg::ref_ptr<osgGA::TrackballManipulator>       trackball            = nullptr;
+    osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> keyswitchManipulator = nullptr;
+
+    // for experiment:
+    osg::ref_ptr<osgViewer::StatsHandler> pStat = nullptr;
+    osg::ref_ptr<osgGA::TrackballManipulator> pTrackball = nullptr;
+    osg::ref_ptr<osgViewer::Viewer> pmViewer = nullptr;
+
+    // osg base funcs
+    void InitManipulators();
+    // load model into the mRoot
+    void InitModel(const std::string& modelPathm, osg::ref_ptr<osg::Group>& mRoot);
+    // init the cmaera
+    void InitCameraConfig();
+    osg::ref_ptr<osgViewer::Viewer> getViewer() { return mViewer; }
+
+    // QObject::connect(&widget, &osgQOpenGLWidget::initialized);
+};
+```
+
+- 2 调用这个类：
+```cpp
+            QOsgWidget *bBoxEdit = new QOsgWidget(modelPath, static_cast<QWidget*>(this));
+
+            // use an ArgumentParser object to manage the program arguments.
+            bBoxEdit->pWidget = new osgQOpenGLWidget(&arguments, this);
+            bBoxEdit->pWidget->show();
+
+            // init the manipulators
+            bBoxEdit->InitManipulators();
+            // init Scene Graph, that is to load the model
+            bBoxEdit->InitModel(modelPath, bBoxEdit->mRoot);
+            // init camera config
+            bBoxEdit->InitCameraConfig();
+
+            // 在这一行，将这个worksapceWidget添加到你想要添加的位置上就ok
+            workspaceWidget = static_cast<QOpenGLWidget*>(&(*(bBoxEdit->pWidget))); 
+```
+
+
+### 2 关于内存申请位置不对带来的野指针问题
+#### 2.1 问题描述：
+```cpp
+            resize(height() * 639 / 480, height());
+            QOsgWidget *bBoxEdit = new QOsgWidget(modelPath, static_cast<QWidget*>(this));
+            // use an ArgumentParser object to manage the program arguments.
+            bBoxEdit->pWidget = new osgQOpenGLWidget(&arguments, this);
+            bBoxEdit->pWidget->show();
+
+            // init the manipulators
+            bBoxEdit->InitManipulators();
+            bBoxEdit->InitModel(modelPath, bBoxEdit->mRoot);
+
+// **************** part0: inside code segment of func call **********************/
+            osg::ref_ptr<osgViewer::Viewer> mViewer = bBoxEdit->pWidget->getOsgViewer();
+            // Add a Stats Handler to the viewer
+            mViewer->addEventHandler(new osgViewer::StatsHandler);
+            // Add the Camera to the Viewer
+            osg::ref_ptr<osg::Camera> camera = mViewer->getCamera();
+            // Set projection matrix and camera attribtues
+            camera->setClearMask(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+            camera->setClearColor(osg::Vec3f(0.2f, 0.2f, 0.4f, 1.0f));
+            //mViewer->addSlave(camera.get());
+            mViewer->setCamera(camera.get());
+            // Set the Scene Data
+
+// *************************** part1: func call **********************************/
+            // bBoxEdit->InitCameraConfig();
+```
+如上代码段，是一段qt程序中，在MainWindow的一个子函数的一段代码，其中bBoxEdit是一个自定义的供调用的类，
+问题来了， part0的代码就是把part2的代码拿出来，仅仅使用part1的代码就会出错，仅仅使用part2就不会，请推测原因？
+
+这里给出part1的实现代码：
+```cpp
+void QOsgWidget::InitCameraConfig() {
+    // Create the viewer for this window
+    mViewer = this->pWidget->getOsgViewer();
+    // Add a Stats Handler to the viewer
+    mViewer->addEventHandler(new osgViewer::StatsHandler);
+
+    // Add the Camera to the Viewer
+    osg::ref_ptr<osg::Camera> camera = mViewer->getCamera();
+    // Set projection matrix and camera attribtues
+    camera->setClearMask(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    camera->setClearColor(osg::Vec3f(0.2f, 0.2f, 0.4f, 1.0f));
+    //mViewer->addSlave(camera.get());
+    mViewer->setCamera(camera.get());
+
+    // Add the Camera Manipulator to the Viewer
+    osg::ref_ptr<osgGA::TrackballManipulator> trackball = new osgGA::TrackballManipulator();
+    mViewer->setCameraManipulator(trackball.get());
+
+    // Set the Scene Data
+    mViewer->setSceneData(mRoot.get());
+}
+```
+
+#### 2.2 错误原因推测：
+首先想到，这肯定是指针带来的问题，指针和作用域和代码范围息息相关，所以放到函数里面和放到mainwindow的一个子函数的随便的一处，最大的区别在于，
+- 0 part2的情况：part2里面的函数调用所用到的指针，是存在qosgwidget的类的栈空间的，意味着只要类不析构，那么该指针所指向的内存就不会被回收。
+- 1 part1的情况：part1里面申请的内存是在mainwindow的一个子函数调用里面申请的，意味着该指针，在该子函数调用结束，它指向的内存会被回收，倘若这一块内存里运行的函数是我们恰恰不希望他在函数结束后就消失，那么我们就需要把这个指针存在一个 __‘安全’__ 的地方。所以你需要存在哪里？  因为上面可以知道，该指针的内存里的函数是被 qosgwidget这个类所需要的,也就是当这个类结束啦，这个指针才会被回收，所以我们把指针存在这里，就不会出现上面的问题了。
+
+#### 2.3 得出结论（个人观点）
+cpp的内存管理问题：
+- 0 尽量不要在业务流程里申请内存，释放内存，如果遇到需要申请内存和释放的地方，请把这一块儿写成一个类，
+用类的变量来保存内存指针，用类的析构来释放内存。
+- 1 **重复1的观点：基于类作为内存管理的最小粒度，不要基于指针**
+
+
+## 2021/06/15
+
+### 1 colmap online拼接cmvs
+colmap-dev的编译命令
+```py
+python scripts/python/build.py \
+    --build_path "F:/prjs/onlineColmap/colmap-dev/build" \
+    --colmap_path "F:/prjs/onlineColmap/colmap-dev" \
+    --boost_path "F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140" \
+    --qt_path "F:/BASE_ENV/forOpenMVS/qt_msvc2015_64/msvc2015_64" \
+    --cgal_path "F:/BASE_ENV/forOpenMVS/CGAL-5.1/build" \
+    --cmake_generator "Visual Studio 14" \
+    --with_cuda \
+    --cuda_path "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.2" \
+
+
+python scripts/python/build.py \
+    --build_path "F:/prjs/onlineColmap/modifyCmake/colmap-dev/build" \
+    --colmap_path "F:/prjs/onlineColmap/modifyCmake/colmap-dev" \
+    --boost_path "F:/BASE_ENV/forOpenMVS/boost_1_73_0_v140" \
+    --qt_path "F:/BASE_ENV/forOpenMVS/qt_msvc2015_64/msvc2015_64" \
+    --cgal_path "F:/BASE_ENV/forOpenMVS/CGAL-5.1/build" \
+    --cmake_generator "Visual Studio 14" \
+    --with_cuda \
+    --cuda_path "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.2" \
+
+```
+
+由于pointCloud库的依赖，我们需要添加如下：
+```sh
+# include
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/include;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdparty/miniBoost;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty/graclus1.2/metisLib;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty/nlopt-2.4.2/api;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty/cimg;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty/tinycthread;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/opencv3.1.0/build/include;
+
+# lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/image_lib.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/jpeg.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/nlopt.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/numeric_lib.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/pmvs_lib.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/PointCloud.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/tinycthread.lib
+
+```
+
+
+
+pmvs的主要输入文件以及参考文档：
+[https://www.di.ens.fr/pmvs/documentation.html](https://www.di.ens.fr/pmvs/documentation.html)
+
+测试命令如下：
+```sh
+./colmap.exe denseol \
+  --sparse_path F:/prjs/onlineColmap/ShiYan/res/sparse \
+  --dense_path F:/prjs/onlineColmap/ShiYan/res/dense \
+  --image_path F:/prjs/onlineColmap/ShiYan/images \
+  --vocab_tree_path F:/prjs/onlineColmap/modifyCMake/colmap-dev/vocab_tree_flickr100K_words32K.bin
+
+```
