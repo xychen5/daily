@@ -22,6 +22,13 @@ ctr+]         : 进入函数
 
 空集：$\varnothing$
 
+
+
+## net tools
+
+### 1 网口查看
+- 1 windows: netstat -ano
+
 ## 2020/10/09
 替换windows路径
 ```sh
@@ -2499,7 +2506,24 @@ python scripts/python/build.py \
 由于pointCloud库的依赖，我们需要添加如下：
 ```sh
 # include
-F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/include;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdparty/miniBoost;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty/graclus1.2/metisLib;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty/nlopt-2.4.2/api;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty/cimg;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/PointCloud/thirdParty/tinycthread;F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/include/opencv3.1.0/build/include;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/../opencv3.1.0/build/include;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/../opencv3.1.0/build/include/opencv;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/../opencv3.1.0/build/include/opencv2;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/include;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/thirdParty;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/thirdParty/graclus1.2/metisLib;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/thirdParty/nlopt-2.4.2/api;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/thirdParty/cimg;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/thirdParty/tinycthread;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/../eigen3.2.9;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/thirdParty/miniBoost;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/thirdParty/jpeg;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/pmvsOnline/build/thirdParty/jpeg;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/Pangolin/include;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/Pangolin/include/pangolin;
+F:/prjs/onlineColmap/OrbSlam24Windows/OrbSlam24Windows/Thirdparty/Pangolin/include;
+F:/prjs/ThirdParty/glew-2.0.0/include;
+%(AdditionalIncludeDirectories)
 
 # lib
 F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/image_lib.lib
@@ -2509,6 +2533,47 @@ F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/numeric_lib.li
 F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/pmvs_lib.lib
 F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/PointCloud.lib
 F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/tinycthread.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/opencv_world310.lib
+F:/prjs/ThirdParty/glew-2.0.0/lib/Release/x64/glew32s.lib
+F:/prjs/ThirdParty/glew-2.0.0/lib/Release/x64/glew32.lib
+opengl32.lib
+F:/prjs/ORB_SLAM3_Fix/ORB_SLAM3/Thirdparty/Pangolin/lib/Release/pangolin.lib
+F:/BASE_ENV/forOpenMVS/libpng/lib/libpng16_static.lib
+F:/BASE_ENV/forOpenMVS/zlib/lib/zlibstatic.lib
+## attention: the last 3 can be retried from pangolin on github
+
+
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/libspqr.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/libcholmod.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/libccolamd.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/libcamd.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/libcolamd.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/libamd.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib64/lapack_blas_windows/liblapack.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib64/lapack_blas_windows/libblas.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/suitesparseconfig.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/metis.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/libcxsparse.lib
+
+```
+
+```
+colmap's lib:
+# lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/image_lib.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/jpeg.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/nlopt.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/numeric_lib.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/pmvs_lib.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/PointCloud.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/tinycthread.lib
+F:/prjs/onlineColmap/modifyCMake/colmap-dev/build/__install__/lib/opencv_world310.lib
+F:\BASE_ENV\forOpenMVS\boost_1_73_0_v140\lib64-msvc-14.0\libboost_filesystem-vc140-mt-x64-1_73.lib
+F:\BASE_ENV\forOpenMVS\boost_1_73_0_v140\lib64-msvc-14.0\libboost_program_options-vc140-mt-x64-1_73.lib
+F:\BASE_ENV\forOpenMVS\boost_1_73_0_v140\lib64-msvc-14.0\libboost_regex-vc140-mt-x64-1_73.lib
+F:\BASE_ENV\forOpenMVS\boost_1_73_0_v140\lib64-msvc-14.0\libboost_system-vc140-mt-x64-1_73.lib
+
+
 
 ```
 
@@ -2519,10 +2584,421 @@ pmvs的主要输入文件以及参考文档：
 
 测试命令如下：
 ```sh
+
 ./colmap.exe denseol \
-  --sparse_path F:/prjs/onlineColmap/ShiYan/res/sparse \
-  --dense_path F:/prjs/onlineColmap/ShiYan/res/dense \
-  --image_path F:/prjs/onlineColmap/ShiYan/images \
+  --sparse_path F:/prjs/onlineColmap/germany/res/sparse \
+  --dense_path F:/prjs/onlineColmap/germany/res/dense \
+  --image_path F:/prjs/onlineColmap/germany/images \
   --vocab_tree_path F:/prjs/onlineColmap/modifyCMake/colmap-dev/vocab_tree_flickr100K_words32K.bin
 
+./colmap.exe funcsparseol \
+  --sparse_path F:/prjs/onlineColmap/germany/res/sparse \
+  --image_path F:/prjs/onlineColmap/germany/images \
+  --vocab_tree_path F:/prjs/onlineColmap/modifyCMake/colmap-dev/vocab_tree_flickr100K_words32K.bin
+
+
 ```
+--sparse_path F:/prjs/onlineColmap/ShiYan/res/sparse   --dense_path F:/prjs/onlineColmap/ShiYan/res/dense  --image_path F:/prjs/onlineColmap/ShiYan/images --vocab_tree_path F:/prjs/onlineColmap/modifyCMake/colmap-dev/vocab_tree_flickr100K_words32K.bin
+
+denseol  --sparse_path F:/prjs/onlineColmap/germany/res/sparse --dense_path F:/prjs/onlineColmap/germany/res/dense  --image_path F:/prjs/onlineColmap/germany/images --vocab_tree_path F:/prjs/onlineColmap/modifyCMake/colmap-dev/vocab_tree_flickr100K_words32K.bin
+
+```sh
+# test germany sh 
+rm -rf /f/prjs/onlineColmap/germany/res/sparse/*
+cp -f ../../colmap/__build__/src/exe/Release/* .
+
+./colmap.exe denseol \
+  --sparse_path F:/prjs/onlineColmap/germany/res/sparse \
+  --dense_path F:/prjs/onlineColmap/germany/res/dense \
+  --image_path F:/prjs/onlineColmap/germany/images \
+  --vocab_tree_path F:/prjs/onlineColmap/modifyCMake/colmap-dev/vocab_tree_flickr100K_words32K.bin
+```
+
+
+## 2021/07/14
+### 1 
+```sh
+F:\prjs\ORB_SLAM3_Fix\ORB_SLAM3;F:\prjs\ORB_SLAM3_Fix\ORB_SLAM3\include;F:\prjs\ORB_SLAM3_Fix\ORB_SLAM3\include\CameraModels;F:\BASE_ENV\forOpenMVS\eigen;F:\BASE_ENV\strawberry\c\include;F:\BASE_ENV\forOpenMVS\boost_1_73_0_v140;F:\prjs\ORB_SLAM3_Fix\ORB_SLAM3\Thirdparty\Pangolin\include;F:\prjs\ORB_SLAM3_Fix\ORB_SLAM3\Thirdparty\Pangolin\build\src\include;F:\prjs\ORB_SLAM3_Fix\ORB_SLAM3\Thirdparty\Pangolin\install\include;F:\BASE_ENV\forOpenMVS\opencv\build;F:\BASE_ENV\forOpenMVS\opencv\include;F:\BASE_ENV\forOpenMVS\opencv\modules\core\include;F:\BASE_ENV\forOpenMVS\opencv\modules\flann\include;F:\BASE_ENV\forOpenMVS\opencv\modules\imgproc\include;F:\BASE_ENV\forOpenMVS\opencv\modules\ml\include;F:\BASE_ENV\forOpenMVS\opencv\modules\photo\include;F:\BASE_ENV\forOpenMVS\opencv\modules\dnn\include;F:\BASE_ENV\forOpenMVS\opencv\modules\features2d\include;F:\BASE_ENV\forOpenMVS\opencv\modules\imgcodecs\include;F:\BASE_ENV\forOpenMVS\opencv\modules\videoio\include;F:\BASE_ENV\forOpenMVS\opencv\modules\calib3d\include;F:\BASE_ENV\forOpenMVS\opencv\modules\highgui\include;F:\BASE_ENV\forOpenMVS\opencv\modules\objdetect\include;F:\BASE_ENV\forOpenMVS\opencv\modules\stitching\include;F:\BASE_ENV\forOpenMVS\opencv\modules\ts\include;F:\BASE_ENV\forOpenMVS\opencv\modules\video\include;F:\BASE_ENV\forOpenMVS\opencv\modules\gapi\include;%(AdditionalIncludeDirectories)
+
+```
+
+## 2021/07/18
+## glog使用：
+项目地址：
+[git@github.com:xychen5/tryGlog.git](git@github.com:xychen5/tryGlog.git)
+推荐使用类似于clion的ide，然后打开该项目，即可编译运行。
+
+### 1 主要作用：
+**能够将glog的日志在cmd中打印**
+主要调用了函数：
+```cpp
+   google::SetStderrLogging(google::INFO); // print the logs whose severity > [info]
+```
+
+### 2 output：
+
+样例输出代码如下：
+```log
+I0718 16:09:07.626883 18628 main.cpp:13] glog used in cmd!!
+
+W0718 16:09:07.627887 18628 main.cpp:14] glog used in cmd!!
+
+E0718 16:09:07.628882 18628 main.cpp:15] glog used in cmd!!
+
+F0718 16:09:07.628882 18628 main.cpp:16] glog used in cmd!!
+```
+
+## 2021/07/19
+
+### 1 ffmpeg 解帧
+```sh
+ffmpeg -i DJI_20210615164633_0003_W.MP4 -r 3 images/%4d.jpg
+
+```
+
+### 2 reinterpret_cast<> 理解以及典型应用：
+对于其他的例如static_cast<>等的应用，参考：[http://www.cplusplus.com/doc/tutorial/typecasting/](http://www.cplusplus.com/doc/tutorial/typecasting/)<br>
+以下引用自: [https://stackoverflow.com/questions/573294/when-to-use-reinterpret-cast](https://stackoverflow.com/questions/573294/when-to-use-reinterpret-cast)<br>
+Here is a variant of Avi Ginsburg's program which clearly illustrates the property of reinterpret_cast mentioned by Chris Luengo, flodin, and cmdLP: that the compiler treats the pointed-to memory location as if it were an object of the new type:
+```cpp
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+class A
+{
+public:
+    int i;
+};
+
+class B : public A
+{
+public:
+    virtual void f() {}
+};
+
+int main()
+{
+    string s;
+    B b;
+    b.i = 0;
+    A* as = static_cast<A*>(&b);
+    A* ar = reinterpret_cast<A*>(&b);
+    B* c = reinterpret_cast<B*>(ar);
+    
+    cout << "as->i = " << hex << setfill('0')  << as->i << "\n";
+    cout << "ar->i = " << ar->i << "\n";
+    cout << "b.i   = " << b.i << "\n";
+    cout << "c->i  = " << c->i << "\n";
+    cout << "\n";
+    cout << "&(as->i) = " << &(as->i) << "\n";
+    cout << "&(ar->i) = " << &(ar->i) << "\n";
+    cout << "&(b.i) = " << &(b.i) << "\n";
+    cout << "&(c->i) = " << &(c->i) << "\n";
+    cout << "\n";
+    cout << "&b = " << &b << "\n";
+    cout << "as = " << as << "\n";
+    cout << "ar = " << ar << "\n";
+    cout << "c  = " << c  << "\n";
+    
+    cout << "Press ENTER to exit.\n";
+    getline(cin,s);
+}
+```
+Which results in output like this:
+```out
+as->i = 0
+ar->i = 50ee64
+b.i   = 0
+c->i  = 0
+
+&(as->i) = 00EFF978
+&(ar->i) = 00EFF974
+&(b.i)   = 00EFF978
+&(c->i)  = 00EFF978
+
+&b = 00EFF974
+as = 00EFF978
+ar = 00EFF974
+c  = 00EFF974
+Press ENTER to exit.
+```
+It can be seen that the B object is built in memory as B-specific data first, followed by the embedded A object. The static_cast correctly returns the address of the embedded A object, and the pointer created by static_cast correctly gives the value of the data field. The pointer generated by reinterpret_cast treats b's memory location as if it were a plain A object, and so when the pointer tries to get the data field it returns some B-specific data as if it were the contents of this field.
+
+应用如下：
+下面的应用根据输入的类型T判断后使用了reinterpret_cast去转换；
+```cpp
+template <typename T>
+void OptionManager::RegisterOption(const std::string& name, const T* option) {
+  if (std::is_same<T, bool>::value) {
+    options_bool_.emplace_back(name, reinterpret_cast<const bool*>(option));
+  } else if (std::is_same<T, int>::value) {
+    options_int_.emplace_back(name, reinterpret_cast<const int*>(option));
+  } else if (std::is_same<T, double>::value) {
+    options_double_.emplace_back(name, reinterpret_cast<const double*>(option));
+  } else if (std::is_same<T, std::string>::value) {
+    options_string_.emplace_back(name,
+                                 reinterpret_cast<const std::string*>(option));
+  } else {
+    LOG(FATAL) << "Unsupported option type";
+  }
+}
+
+```
+
+## 2021/07/20 
+
+### 1 进程句柄数不断攀升导致被kill
+是不是打开的某些文件没有被close
+
+
+## 2021/08/04
+
+### 1 std::thread传入引用值需要使用std::ref
+```cpp
+void main() {
+
+    while(1){
+        ...<省略>...
+        if (!initializedFlag) {
+            initializedFlag = true;
+            // viewThd = new std::thread(viewThread, camVecToDraw); // wrong way
+            viewThd = new std::thread(viewThread, std::ref(camVecToDraw)); // right way
+        }
+        ...<省略>...
+
+        addCamToDrawVec(imgData.image, camVecToDraw);
+        camVecToDraw;
+    }
+    
+    viewThd.join();
+    delete viewThd;
+    viewThd = nullptr;
+}
+
+void viewThread(std::vector<pangolin::OpenGlMatrix>& camVecToDraw) {
+    while(!shallQuit()) {
+        // render some cameras according to camVecToDraw
+        ...<省略>...
+    }
+}
+
+
+```
+
+
+## 2021/08/24
+
+### 1 pmvs论文阅读 
+- 1 文章 Accurate, Dense, and Robust Multiview Stereopsis
+- 提出 patch-based MVS algorithm
+ 
+- 2 关键词理解：
+  - 2.1 patch: 估计模型表面的一个tagent平面，更具体的： 3维的一个矩形，其中一边平行于相机拍的图片，范围是5*5或者7*7的一个矩形
+  - 2.2 Photometric Discrepancy Function 光学差异函数： 用来恢复光学差异小的那些patches
+
+
+## 2021/08/25
+
+### 1 mysql数据库表设计
+```sql
+/*
+SQLyog 企业版 - MySQL GUI v8.14 
+MySQL - 5.5.40 : Database - HdMarket
+*********************************************************************
+*/
+
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`FireTest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+
+USE `FireTest`;
+
+/*Table structure for table `address` */
+
+DROP TABLE IF EXISTS `message`;
+
+CREATE TABLE `mesage` (
+  `id` varchar(200) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `contact` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '联系人姓名',
+  `addressDesc` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '收货地址明细',
+  `postCode` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '邮编',
+  `tel` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '联系人电话',
+  `createdBy` bigint(20) DEFAULT NULL COMMENT '创建者',
+  `creationDate` datetime DEFAULT NULL COMMENT '创建时间',
+  `modifyBy` bigint(20) DEFAULT NULL COMMENT '修改者',
+  `modifyDate` datetime DEFAULT NULL COMMENT '修改时间',
+  `userId` bigint(20) DEFAULT NULL COMMENT '用户ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `address` */
+
+insert  into `address`(`id`,`contact`,`addressDesc`,`postCode`,`tel`,`createdBy`,`creationDate`,`modifyBy`,`modifyDate`,`userId`) values (1,'王丽','杭州市上城区潮鸣寺巷44号','100010','13678789999',1,'2016-04-13 00:00:00',NULL,NULL,1),(2,'张红丽','杭州市西湖区文新街3号','100000','18567672312',1,'2016-04-13 00:00:00',NULL,NULL,1),(3,'任志强','杭州市上城区美术馆后街23号','100021','13387906742',1,'2016-04-13 00:00:00',NULL,NULL,1),(4,'曹颖','杭州市滨江区滨江门南大街14号','100053','13568902323',1,'2016-04-13 00:00:00',NULL,NULL,2),(5,'李慧','杭州市西湖区三墩路南三巷3号','100032','18032356666',1,'2016-04-13 00:00:00',NULL,NULL,3),(6,'王国强','杭州市江干区下沙工业区18号','100061','13787882222',1,'2016-04-13 00:00:00',NULL,NULL,3);
+
+/*Table structure for table `bill` */
+
+DROP TABLE IF EXISTS `bill`;
+
+CREATE TABLE `bill` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `billCode` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '账单编码',
+  `productName` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '商品名称',
+  `productDesc` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '商品描述',
+  `productUnit` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '商品单位',
+  `productCount` decimal(20,2) DEFAULT NULL COMMENT '商品数量',
+  `totalPrice` decimal(20,2) DEFAULT NULL COMMENT '商品总额',
+  `isPayment` int(10) DEFAULT NULL COMMENT '是否支付（1：未支付 2：已支付）',
+  `createdBy` bigint(20) DEFAULT NULL COMMENT '创建者（userId）',
+  `creationDate` datetime DEFAULT NULL COMMENT '创建时间',
+  `modifyBy` bigint(20) DEFAULT NULL COMMENT '更新者（userId）',
+  `modifyDate` datetime DEFAULT NULL COMMENT '更新时间',
+  `providerId` bigint(20) DEFAULT NULL COMMENT '供应商ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `bill` */
+
+insert  into `bill`(`id`,`billCode`,`productName`,`productDesc`,`productUnit`,`productCount`,`totalPrice`,`isPayment`,`createdBy`,`creationDate`,`modifyBy`,`modifyDate`,`providerId`) values (1,'BILL2016_001','洗发水、护发素','日用品-洗发、护发','瓶','500.00','25000.00',2,1,'2014-12-14 13:02:03',NULL,NULL,13),(2,'BILL2016_002','香皂、肥皂、药皂','日用品-皂类','块','1000.00','10000.00',2,1,'2016-03-23 04:20:40',NULL,NULL,13),(3,'BILL2016_003','大豆油','食品-食用油','斤','300.00','5890.00',2,1,'2014-12-14 13:02:03',NULL,NULL,6),(4,'BILL2016_004','橄榄油','食品-进口食用油','斤','200.00','9800.00',2,1,'2013-10-10 03:12:13',NULL,NULL,7),(5,'BILL2016_005','洗洁精','日用品-厨房清洁','瓶','500.00','7000.00',2,1,'2014-12-14 13:02:03',NULL,NULL,9),(6,'BILL2016_006','美国大杏仁','食品-坚果','袋','300.00','5000.00',2,1,'2016-04-14 06:08:09',NULL,NULL,4),(7,'BILL2016_007','沐浴液、精油','日用品-沐浴类','瓶','500.00','23000.00',1,1,'2016-07-22 10:10:22',NULL,NULL,14),(8,'BILL2016_008','不锈钢盘碗','日用品-厨房用具','个','600.00','6000.00',2,1,'2016-04-14 05:12:13',NULL,NULL,14),(9,'BILL2016_009','塑料杯','日用品-杯子','个','350.00','1750.00',2,1,'2016-02-04 11:40:20',NULL,NULL,14),(10,'BILL2016_010','豆瓣酱','食品-调料','瓶','200.00','2000.00',2,1,'2013-10-29 05:07:03',NULL,NULL,8),(11,'BILL2016_011','海之蓝','饮料-国酒','瓶','50.00','10000.00',1,1,'2016-04-14 16:16:00',NULL,NULL,1),(12,'BILL2016_012','芝华士','饮料-洋酒','瓶','20.00','6000.00',1,1,'2016-09-09 17:00:00',NULL,NULL,1),(13,'BILL2016_013','长城红葡萄酒','饮料-红酒','瓶','60.00','800.00',2,1,'2016-11-14 15:23:00',NULL,NULL,1),(14,'BILL2016_014','泰国香米','食品-大米','斤','400.00','5000.00',2,1,'2016-10-09 15:20:00',NULL,NULL,3),(15,'BILL2016_015','东北大米','食品-大米','斤','600.00','4000.00',2,1,'2016-11-14 14:00:00',NULL,NULL,3),(16,'BILL2016_016','可口可乐','饮料','瓶','2000.00','6000.00',2,1,'2012-03-27 13:03:01',NULL,NULL,2),(17,'BILL2016_017','脉动','饮料','瓶','1500.00','4500.00',2,1,'2016-05-10 12:00:00',NULL,NULL,2),(18,'BILL2016_018','哇哈哈','饮料','瓶','2000.00','4000.00',2,1,'2015-11-24 15:12:03',NULL,NULL,2);
+
+/*Table structure for table `provider` */
+
+DROP TABLE IF EXISTS `provider`;
+
+CREATE TABLE `provider` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `proCode` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '供应商编码',
+  `proName` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '供应商名称',
+  `proDesc` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '供应商详细描述',
+  `proContact` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '供应商联系人',
+  `proPhone` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '联系电话',
+  `proAddress` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '地址',
+  `proFax` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '传真',
+  `createdBy` bigint(20) DEFAULT NULL COMMENT '创建者（userId）',
+  `creationDate` datetime DEFAULT NULL COMMENT '创建时间',
+  `modifyDate` datetime DEFAULT NULL COMMENT '更新时间',
+  `modifyBy` bigint(20) DEFAULT NULL COMMENT '更新者（userId）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `provider` */
+
+insert  into `provider`(`id`,`proCode`,`proName`,`proDesc`,`proContact`,`proPhone`,`proAddress`,`proFax`,`createdBy`,`creationDate`,`modifyDate`,`modifyBy`) values (1,'BJ_GYS001','杭州三木堂商贸有限公司','长期合作伙伴，主营产品:茅台、五粮液、郎酒、酒鬼酒、泸州老窖、赖茅酒、法国红酒等','张国强','13566667777','杭州市丰台区育芳园北路','010-58858787',1,'2013-03-21 16:52:07',NULL,NULL),(2,'HB_GYS001','石家庄帅益食品贸易有限公司','长期合作伙伴，主营产品:饮料、水饮料、植物蛋白饮料、休闲食品、果汁饮料、功能饮料等','王军','13309094212','河北省石家庄新华区','0311-67738876',1,'2016-04-13 04:20:40',NULL,NULL),(3,'GZ_GYS001','深圳市泰香米业有限公司','初次合作伙伴，主营产品：良记金轮米,龙轮香米等','郑程瀚','13402013312','广东省深圳市福田区深南大道6006华丰大厦','0755-67776212',1,'2014-03-21 16:56:07',NULL,NULL),(4,'GZ_GYS002','深圳市喜来客商贸有限公司','长期合作伙伴，主营产品：坚果炒货.果脯蜜饯.天然花茶.营养豆豆.特色美食.进口食品.海味零食.肉脯肉','林妮','18599897645','广东省深圳市福龙工业区B2栋3楼西','0755-67772341',1,'2013-03-22 16:52:07',NULL,NULL),(5,'JS_GYS001','兴化佳美调味品厂','长期合作伙伴，主营产品：天然香辛料、鸡精、复合调味料','徐国洋','13754444221','江苏省兴化市林湖工业区','0523-21299098',1,'2015-11-22 16:52:07',NULL,NULL),(6,'BJ_GYS002','杭州纳福尔食用油有限公司','长期合作伙伴，主营产品：山茶油、大豆油、花生油、橄榄油等','马莺','13422235678','杭州市滨江区珠江帝景1号楼','010-588634233',1,'2012-03-21 17:52:07',NULL,NULL),(7,'BJ_GYS003','杭州国粮食用油有限公司','初次合作伙伴，主营产品：花生油、大豆油、小磨油等','王驰','13344441135','杭州大兴青云店开发区','010-588134111',1,'2016-04-13 00:00:00',NULL,NULL),(8,'ZJ_GYS001','慈溪市广和绿色食品厂','长期合作伙伴，主营产品：豆瓣酱、黄豆酱、甜面酱，辣椒，大蒜等农产品','薛圣丹','18099953223','浙江省宁波市慈溪周巷小安村','0574-34449090',1,'2013-11-21 06:02:07',NULL,NULL),(9,'GX_GYS001','优百商贸有限公司','长期合作伙伴，主营产品：日化产品','李立国','13323566543','广西南宁市秀厢大道42-1号','0771-98861134',1,'2013-03-21 19:52:07',NULL,NULL),(10,'JS_GYS002','南京火头军信息技术有限公司','长期合作伙伴，主营产品：不锈钢厨具等','陈女士','13098992113','江苏省南京市浦口区浦口大道1号新城总部大厦A座903室','025-86223345',1,'2013-03-25 16:52:07',NULL,NULL),(11,'GZ_GYS003','广州市白云区美星五金制品厂','长期合作伙伴，主营产品：海绵床垫、坐垫、靠垫、海绵枕头、头枕等','梁天','13562276775','广州市白云区钟落潭镇福龙路20号','020-85542231',1,'2016-12-21 06:12:17',NULL,NULL),(12,'BJ_GYS004','杭州隆盛日化科技','长期合作伙伴，主营产品：日化环保清洗剂，家居洗涤专卖、洗涤用品网、墙体除霉剂、墙面霉菌清除剂等','孙欣','13689865678','杭州市大兴区旧宫','010-35576786',1,'2014-11-21 12:51:11',NULL,NULL),(13,'SD_GYS001','山东豪克华光联合发展有限公司','长期合作伙伴，主营产品：洗衣皂、洗衣粉、洗衣液、洗洁精、消杀类、香皂等','吴洪转','13245468787','山东济阳济北工业区仁和街21号','0531-53362445',1,'2015-01-28 10:52:07',NULL,NULL),(14,'JS_GYS003','无锡喜源坤商行','长期合作伙伴，主营产品：日化品批销','周一清','18567674532','江苏无锡盛岸西路','0510-32274422',1,'2016-04-23 11:11:11',NULL,NULL),(15,'ZJ_GYS002','乐摆日用品厂','长期合作伙伴，主营产品：各种中、高档塑料杯，塑料乐扣水杯（密封杯）、保鲜杯（保鲜盒）、广告杯、礼品杯','王世杰','13212331567','浙江省金华市义乌市义东路','0579-34452321',1,'2016-08-22 10:01:30',NULL,NULL);
+
+/*Table structure for table `role` */
+
+DROP TABLE IF EXISTS `role`;
+
+CREATE TABLE `role` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `roleCode` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '角色编码',
+  `roleName` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '角色名称',
+  `createdBy` bigint(20) DEFAULT NULL COMMENT '创建者',
+  `creationDate` datetime DEFAULT NULL COMMENT '创建时间',
+  `modifyBy` bigint(20) DEFAULT NULL COMMENT '修改者',
+  `modifyDate` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `role` */
+
+insert  into `role`(`id`,`roleCode`,`roleName`,`createdBy`,`creationDate`,`modifyBy`,`modifyDate`) values (1,'ADMIN','系统管理员',1,'2016-04-13 00:00:00',NULL,NULL),(2,'MANAGER','经理',1,'2016-04-13 00:00:00',NULL,NULL),(3,'EMPLOYEE','普通员工',1,'2016-04-13 00:00:00',NULL,NULL);
+
+/*Table structure for table `user` */
+
+DROP TABLE IF EXISTS `user`;
+
+CREATE TABLE `user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `userCode` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户编码',
+  `userName` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户名称',
+  `userPassword` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户密码',
+  `gender` int(10) DEFAULT NULL COMMENT '性别（1:女、 2:男）',
+  `birthday` date DEFAULT NULL COMMENT '出生日期',
+  `phone` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '手机',
+  `address` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '地址',
+  `userRole` bigint(20) DEFAULT NULL COMMENT '用户角色（取自角色表-角色id）',
+  `createdBy` bigint(20) DEFAULT NULL COMMENT '创建者（userId）',
+  `creationDate` datetime DEFAULT NULL COMMENT '创建时间',
+  `modifyBy` bigint(20) DEFAULT NULL COMMENT '更新者（userId）',
+  `modifyDate` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `user` */
+
+insert  into `user`(`id`,`userCode`,`userName`,`userPassword`,`gender`,`birthday`,`phone`,`address`,`userRole`,`createdBy`,`creationDate`,`modifyBy`,`modifyDate`) values (1,'admin','系统管理员','1234567',1,'1983-10-10','13688889999','杭州市西湖区文二路207号',1,1,'2013-03-21 16:52:07',NULL,NULL),(2,'liming','李明','0000000',2,'1983-12-10','13688884457','杭州市上城区凤起路9号',2,1,'2014-12-31 19:52:09',NULL,NULL),(5,'hanlubiao','韩路彪','0000000',2,'1984-06-05','18567542321','杭州市滨江区会展中心12号',2,1,'2014-12-31 19:52:09',NULL,NULL),(6,'zhanghua','张华','0000000',1,'1983-06-15','13544561111','杭州市西湖区学院路61号',3,1,'2013-02-11 10:51:17',NULL,NULL),(7,'wangyang','王洋','0000000',2,'1982-12-31','13444561124','杭州市西湖区文欣商务楼',3,1,'2014-06-11 19:09:07',NULL,NULL),(8,'zhaoyan','赵燕','0000000',1,'1986-03-07','18098764545','杭州市西湖区文欣苑小区10号楼',3,1,'2016-04-21 13:54:07',NULL,NULL),(10,'sunlei','孙磊','0000000',2,'1981-01-04','13387676765','杭州市滨江区管庄新月小区12楼',3,1,'2015-05-06 10:52:07',NULL,NULL),(11,'sunxing','孙兴','0000000',2,'1978-03-12','13367890900','杭州市滨江区城南大街10号',3,1,'2016-11-09 16:51:17',NULL,NULL),(12,'zhangchen','张晨','0000000',1,'1986-03-28','18098765434','滨江区北柏林爱乐三期13号楼',3,1,'2016-08-09 05:52:37',1,'2016-04-14 14:15:36'),(13,'dengchao','邓超','0000000',2,'1981-11-04','13689674534','杭州市西湖区市委家属院10号楼',3,1,'2016-07-11 08:02:47',NULL,NULL),(14,'yangguo','杨过','0000000',2,'1980-01-01','13388886623','杭州市滨江区北苑家园茉莉园20号楼',3,1,'2015-02-01 03:52:07',NULL,NULL),(15,'zhaomin','赵敏','0000000',1,'1987-12-04','18099897657','杭州市江干区天通苑3区12号楼',2,1,'2015-09-12 12:02:12',NULL,NULL);
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+```
+
+### 2 spring boot && vscode
+
+- 2.1 java环境：
+  - 2.1.1 首先下载安装java se： [https://javadl.oracle.com/webapps/download/AutoDL?BundleId=245029_d3c52aa6bfa54d3ca74e617f18309292](https://javadl.oracle.com/webapps/download/AutoDL?BundleId=245029_d3c52aa6bfa54d3ca74e617f18309292)
+  - 2.1.2 下载jdk11： [https://github-releases.githubusercontent.com/372924883/f3dd1529-363d-49fe-b053-028ff6518a3f?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210825%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210825T074918Z&X-Amz-Expires=300&X-Amz-Signature=d6ad0306c61908e94fc54fee6ae1c332e524603c13c8dcdd0e1ddcefe37d7aa9&X-Amz-SignedHeaders=host&actor_id=40788136&key_id=0&repo_id=372924883&response-content-disposition=attachment%3B%20filename%3DOpenJDK11U-jdk_x64_windows_hotspot_11.0.12_7.msi&response-content-type=application%2Foctet-stream](https://github-releases.githubusercontent.com/372924883/f3dd1529-363d-49fe-b053-028ff6518a3f?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210825%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210825T074918Z&X-Amz-Expires=300&X-Amz-Signature=d6ad0306c61908e94fc54fee6ae1c332e524603c13c8dcdd0e1ddcefe37d7aa9&X-Amz-SignedHeaders=host&actor_id=40788136&key_id=0&repo_id=372924883&response-content-disposition=attachment%3B%20filename%3DOpenJDK11U-jdk_x64_windows_hotspot_11.0.12_7.msi&response-content-type=application%2Foctet-stream)
+  - 2.1.3 配置jdk的位置：JAVA_HOME: Z:\BASE_ENV\java\openJDK11\
+- 2.2 ide： vscode
+  - 2.2.1 参考其中之一：[https://spring.io/tools](https://spring.io/tools)
+  - 2.2.2 安装两个插件： vscjava.vscode-java-pack pivotal.vscode-boot-dev-pack
+  - 然后按照插件开始工作
+- 2.3 build tool: maven配置方式：
+  - 2.3.1 手动下载：[https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz](https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz)
+  - 2.3.2 配置第三方jar包和jar包的目录以及个人的maven配置：
+    - 以idea为例子： build->build tools->maven->user settings: Z:\softwares\apache-maven-3.6.3\conf\settings.xml, 打开这个可以看到这里有jar包的获取的mirror等。
+    - build->build tools->maven->local repo: Z:\softwares\repo, repo存放了生成的jar包以及第三方jar包
+
+## 2021/08/27
+
+### 1 liquibase的changelog自动生成：
+进入对应的模块的根目录，（也就是含有pom.xml的目录）执行如下命令：
+```sh
+mvn liquibase:generateChangeLog
+```
+
+
+## 2021/08/28
+
+### 1 java spring框架中的几个关键概念的理解：
+
+- 0 ioc (控制翻转)：对象的生命周期不再由程序员维护，而是交给框架维护
+- 1 spring的容器理解：bean的管理者，比如spring中的两种容器[Spring BeanFactory 容器](https://www.w3cschool.cn/wkspring/j3181mm3.html)和[Spring ApplicationContext 容器](https://www.w3cschool.cn/wkspring/yqdx1mm5.html)，他们返回的是一个bean的工(这大概就是容器)，我们可以通过这个工厂获得这个bean。 这里有一个图很生动： ![https://atts.w3cschool.cn/attachments/image/wk/wkspring/ioc1.jpg](https://atts.w3cschool.cn/attachments/image/wk/wkspring/ioc1.jpg)
+- 2 bean的理解：[https://www.w3cschool.cn/wkspring/8kei1icc.html](https://www.w3cschool.cn/wkspring/8kei1icc.html)
+  - 其实主要就是说，bean本身代表的是被spring框架管理起来的对象，它的创建生成可以通过spring core提供的函数来生成，spring管理它的时候需要bean对应的xml，里面确定了它的依赖，构造，析构等等函数。
+  - 管理过程如图： ![](https://atts.w3cschool.cn/attachments/image/20201030/1604037368126454.png)
+- 3 DI(依赖注入) spring的核心功能，通过di来管理bean之间的依赖关系 
+  - [构造函数注入](https://www.w3cschool.cn/wkspring/t7n41mm7.html)实际上就是xml中声明构造里需要相对应的依赖类，下面的都是类似的
+  - [setter注入](https://www.w3cschool.cn/wkspring/vneb1mm9.html) 实际上就是，调用类有一个setter方法，会将调用类的一个手续属性setter成为对应的被调用类，然后再xml中配置好这个setter方法对应的被调用类即可
+  - [注入内部bean](https://www.w3cschool.cn/wkspring/qujn1icm.html) 实际上就是假设调用类中有一个属性是一个依赖类需要初始化，那么直接在bean的xml为这个属性内部嵌套一个bean
+  - [注入集合] 就是在xml中给调用类的一些属性初始化，没什么意思
+- 4 beans自动装配: 也就是不使用上面DI中在xml配置文件中的<constructor-arg>和<property>元素来注入，而是自动装配来减少xml的大小，自动装配有几种模式：
+  - 4.1 byName: 调用类里有一个属性的定义名称是A,那么spring会在xml找到A这个bean，也就是A的这个bean的id需要和A相等，然后完成装配
+  - 4.2 byType: 调用类里有一个属性的类型为A,那么spring会在xml找到A这个bean，也就会说A的这个bean的class需要和A相等，然后完成装配
+  - 4.3 构造自动装配: 就是构造函数中的参数去做byType的自动装配
+- 5 基于注解的配置(spring2.5 以后就可以使用注解来做依赖注入，这样就不需要使用xml来描述哪两个bean之间有依赖了)
+  - 5.1 @Reuired 会告诉spring调用类的属性的set方法(这个set方法被@required了，必须在xml中配置这个属性的依赖
+  - 5.2 @Autowired 自动把bean装配到调用类的属性里，可以申明给属性或者构造函数甚至set，map等属性
+  - 5.3 @qualifier 就是你的xml中有多个bean的class是一样的，然后你得显示的告诉spring你需要用哪个id的bean装配到调用类的用autowird注解的字段里吧？那就使用@qualifier来明确使用哪个id即可
+  - 5.4 JSR250: [@PostConstruct](https://docs.oracle.com/javaee/7/api/javax/annotation/PostConstruct.html)，@PreDestroy和xml中的或或者@bean语法中的init—method和destroy-method类似，都是在javabean在被注入以后需要调用的函数，然后只能有一个函数被这样注释，其次，@Resource则是在字段或者setter方法中告诉spring在调用类中去注入哪一个id的bean
+  - 5.5 基于java的配置，@configuration：表示这个类可以使用容器作为bean定义的来源，@bean:注释的方法会返回一个对象，对象是被注册在spring 应用程序的上下文的bean，也就是说，configuration注释的类相当于xml中的bean的class，而@Bean注释的方法，相当于xml中bean的id.
+  - 5.6 [spring事件处理](https://www.w3cschool.cn/wkspring/reap1icq.html)，spring通过contextaplication来管理beaan的生命周期，那么这个context类有start，stop等过程，然后可以在xml中告诉spring start和stop过程分别调用哪些函数，这就达到了上下文发布和暂停时执行某些动作的目的
+  - 5.7 [spring自定义事件](https://www.w3cschool.cn/wkspring/7jho1ict.html), 主要是定义一个even，然后有个custompublisher继承自框架的publisher，然后有个handler继承自框架的handler，那么publisher发布的时候，handler就会自动想要相对于这个event的handle方法，完成事件的响应过程
+- 
+### 2 spring boot **最全文档： [https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/reference/html/](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/reference/html/)**
+
+#### 2.1 关键概念
+
+#### 2.2
