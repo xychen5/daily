@@ -5,8 +5,13 @@ ctr+]         : 进入函数
 
 ## latex
 ### 1 特殊符号
+[箭头](https://devdocs.io/latex/arrows)<br>
+$\leftarrow$
+$\Longleftarrow$
 
 梯度：$\nabla$
+
+冒号: $f\colon D\to C$
 
 偏导：$\partial$
 
@@ -22,12 +27,36 @@ ctr+]         : 进入函数
 
 空集：$\varnothing$
 
+### 2 数学
+```latex
+$$
+\frac{numerator}{denominator}
+\} or \rbrace or \lbrack or \lfloor or \lceil or \backslash or \|
+$$
 
+$$
+\begin{array}{cccc}
+  a_{0,0}    &a_{0,1}   &a_{0,2} &\   \ldots \\
+  a_{1,0}    &\ddots                     \\
+  \vdots
+\end{array}
+$$
 
+$$
+  \frac{\partial^2u}{\partial t^2} = c^2\nabla^2u
+$$
+```
 ## net tools
 
 ### 1 网口查看
 - 1 windows: netstat -ano
+
+
+## standards/styles
+
+### 0.1 restful风格 [https://www.cnblogs.com/MTRD/p/12153561.html](https://www.cnblogs.com/MTRD/p/12153561.html)
+### 0.2 url规范 [https://www.cnblogs.com/hduwbf/p/7300794.html](https://www.cnblogs.com/hduwbf/p/7300794.html)
+### 0.3 sprint boot处理各种需求[https://spring.io/guides](https://spring.io/guides)
 
 ## 2020/10/09
 替换windows路径
@@ -2968,6 +2997,11 @@ insert  into `user`(`id`,`userCode`,`userName`,`userPassword`,`gender`,`birthday
 ```sh
 mvn liquibase:generateChangeLog
 ```
+### 2 liquibase changelog validation failed:
+同上，执行：
+```
+mvn liquibase:clearCheckSums
+```
 
 
 ## 2021/08/28
@@ -3002,3 +3036,71 @@ mvn liquibase:generateChangeLog
 #### 2.1 关键概念
 
 #### 2.2
+
+
+## 2021 09/10
+### 1 cesium/source/core/cartesian3.js 经纬度转WGS84坐标代码：
+```js
+Cartesian3.fromRadians = function (
+  longitude,
+  latitude,
+  height,
+  ellipsoid,
+  result
+) {
+  //>>includeStart('debug', pragmas.debug);
+  Check.typeOf.number("longitude", longitude);
+  Check.typeOf.number("latitude", latitude);
+  //>>includeEnd('debug');
+
+  height = defaultValue(height, 0.0);
+  var radiiSquared = defined(ellipsoid)
+    ? ellipsoid.radiiSquared
+    : wgs84RadiiSquared;
+
+  var cosLatitude = Math.cos(latitude);
+  scratchN.x = cosLatitude * Math.cos(longitude);
+  scratchN.y = cosLatitude * Math.sin(longitude);
+  scratchN.z = Math.sin(latitude);
+  scratchN = Cartesian3.normalize(scratchN, scratchN);
+
+  Cartesian3.multiplyComponents(radiiSquared, scratchN, scratchK);
+  var gamma = Math.sqrt(Cartesian3.dot(scratchN, scratchK));
+  scratchK = Cartesian3.divideByScalar(scratchK, gamma, scratchK);
+  scratchN = Cartesian3.multiplyByScalar(scratchN, height, scratchN);
+
+  if (!defined(result)) {
+    result = new Cartesian3();
+  }
+  return Cartesian3.add(scratchK, scratchN, result);
+};
+```
+
+### 1 redis [持久化方式](http://www.redis.cn/topics/persistence.html)
+- RDB (redis database backup file)
+- AOF (append only file)
+
+### 2 sql的生成方式
+
+
+## 2021/09/16 
+Active 3D Modeling via Online Multi-View Stereo
+
+[11] M. Pizzoli, C. Forster, and D. Scaramuzza, “Remode: Probabilistic,
+monocular dense reconstruction in real time,” in 2014 IEEE International Conference on Robotics and Automation (ICRA)
+
+[37] J. R. Shewchuk, “Delaunay refinement algorithms for triangular mesh
+generation,” Computational Geometry, vol. 22, no. 1-3, pp. 21–74,
+
+
+[14] T. Whelan, R. F. Salas-Moreno, B. Glocker, A. J. Davison, and
+S. Leutenegger, “Elasticfusion: Real-time dense slam and light source
+estimation,” The International Journal of Robotics Research, vol. 35,
+no. 14, pp. 1697–1716, 2016.
+
+
+## 2021/09/23
+
+- 1 提出了什么？
+- 2 解决了什么问题？
+- 3 关键思路？
